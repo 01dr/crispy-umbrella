@@ -6,6 +6,7 @@
 	"author": "Space Invader <amazing.space.invader@gmail.com>",
 	"license": "MIT",
 	"scripts": {
+		"start2": "node server.js",
 		"start": "NODE_ENV=development webpack-dev-server",
 		"build": "NODE_ENV=production webpack -p"
 	},
@@ -41,6 +42,9 @@
 		"react-dom": "^15.4.2",
 		"react-hot-loader": "^1.3.1",
 		"react-redux": "^5.0.2",
+		"react-router": "^v4.0.0-beta.7",
+		"react-router-dom": "^4.0.0",
+		"react-router-redux": "^4.0.8",
 		"redux": "^3.6.0",
 		"redux-devtools": "^3.3.2",
 		"redux-devtools-dock-monitor": "^1.1.1",
@@ -50,7 +54,12 @@
 		"sequelize": "^3.30.2",
 		"sqlite3": "^3.1.8",
 		"style-loader": "^0.13.1",
+		"superagent": "^3.5.0",
 		"webpack": "^2.2.1",
 		"webpack-dev-server": "^2.3.0"
+	},
+	"devDependencies": {
+		"webpack-dev-middleware": "^1.10.1",
+		"webpack-hot-middleware": "^2.17.1"
 	}
 }

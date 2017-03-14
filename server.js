@@ -1,10 +1,9 @@
-var express = require('express'),
-    bodyParser = require('body-parser'),
-    http = require('http'),
-    path = require('path'),
-    Sequelize = require('sequelize'),
-    _ = require('lodash');
-
+const express = require('express');
+const bodyParser = require('body-parser');
+const http = require('http');
+const path = require('path');
+const Sequelize = require('sequelize');
+const _ = require('lodash');
 
 sequelize = new Sequelize('sqlite://' + path.join(__dirname, 'invoices.sqlite'), {
   dialect: 'sqlite',
@@ -143,6 +142,12 @@ app.set('port', process.env.PORT || 8000);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, 'public')));
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:8000');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    next();
+});
 
 // CUSTOMERS API
 
@@ -303,16 +308,16 @@ const port = isDeveloping ? 3000 : process.env.PORT;
 if (isDeveloping) {
   const compiler = webpack(config);
   const middleware = webpackMiddleware(compiler, {
-    // publicPath: config.output.publicPath,
+    publicPath: config.output.publicPath,
     // contentBase: 'src',
-    // stats: {
-    //   colors: true,
-    //   hash: false,
-    //   timings: true,
-    //   chunks: false,
-    //   chunkModules: false,
-    //   modules: false
-    // }
+    stats: {
+      colors: true,
+      hash: false,
+      timings: true,
+      chunks: false,
+      chunkModules: false,
+      modules: false
+    }
   });
 
   app.use(middleware);

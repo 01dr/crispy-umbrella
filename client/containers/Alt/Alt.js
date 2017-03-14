@@ -4,17 +4,16 @@
  */
 
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
-//import '../common/global.pcss';
+import { Link } from 'react-router-dom';
 
-class Main extends Component {
+export default class Alt extends Component {
     render() {
         return (
             <div>
-                sup
+                <Link to="/">Home</Link>
+                <Link to="/alt">Alt</Link>
+                alt
             </div>
         )
     }
 }
-
-export default connect(() => ({}))(Main)

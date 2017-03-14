@@ -2,7 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 
-const sourcePath = path.join(__dirname, './src');
+const sourcePath = path.join(__dirname, './client');
 const staticsPath = path.join(__dirname, './static');
 const nodeEnv = process.env.NODE_ENV || 'development';
 const isProd = nodeEnv === 'production';
@@ -18,6 +18,7 @@ const config = {
     },
     output: {
         path: staticsPath,
+        publicPath: '/',
         filename: 'bundle.js'
     },
     resolve: {
@@ -28,7 +29,7 @@ const config = {
         ]
     },
     devServer: {
-        contentBase: './src',
+        contentBase: './client',
         historyApiFallback: true,
         host: '0.0.0.0',
         port: 3000,
