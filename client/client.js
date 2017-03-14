@@ -6,7 +6,6 @@ import { BrowserRouter as Router } from 'react-router-dom'
 import createBrowserHistory from 'history/createBrowserHistory'
 
 import DevTools from './containers/DevTools';
-// import Root from './containers/Root';
 import store from './store';
 import routes from './routes';
 

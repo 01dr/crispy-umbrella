@@ -1,23 +1,22 @@
 /**
  * Crafted by Aidar Ibatullin <amazing.space.invader@gmail.com>
- * 13.03.17
+ * 14.03.17
  */
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import '../common/global.pcss';
 
 import Menu from '../../components/Menu/Menu';
 
-class Main extends Component {
+class Products extends Component {
     render() {
         return (
             <div>
                 <Menu/>
-                <div>sup!</div>
+                <div>Products container</div>
             </div>
         )
     }
 }
 
-export default connect(() => ({}))(Main)
+export default connect(() => ({}))(Products);

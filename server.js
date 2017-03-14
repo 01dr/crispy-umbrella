@@ -137,164 +137,170 @@ sequelize.sync()
   console.log("ERROR SYNCING WITH DB", e);
 });
 
-var app = module.exports = express();
+const app = new express();
 app.set('port', process.env.PORT || 8000);
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'static')));
 
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'http://localhost:8000');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    next();
-});
+// app.use((req, res, next) => {
+//     res.header('Access-Control-Allow-Origin', 'http://localhost:8000');
+//     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+//     next();
+// });
 
 // CUSTOMERS API
 
-app.route('/api/customers')
-  .get(function(req, res) {
-    Customer.findAll().then(function(customers) {
-      res.json(customers);
-    })
-  })
-  .post(function(req, res) {
-    var customer = Customer.build(_.pick(req.body, ['name', 'address', 'phone']));
-    customer.save().then(function(customer){
-      res.json(customer);
-    });
-  });
+// app.route('/api/customers')
+//   .get(function(req, res) {
+//     Customer.findAll().then(function(customers) {
+//       res.json(customers);
+//     })
+//   })
+//   .post(function(req, res) {
+//     var customer = Customer.build(_.pick(req.body, ['name', 'address', 'phone']));
+//     customer.save().then(function(customer){
+//       res.json(customer);
+//     });
+//   });
+//
+// app.route('/api/customers/:customer_id')
+//   .get(function(req, res) {
+//     Customer.findById(req.params.customer_id).then(function(customer) {
+//       res.json(customer);
+//     });
+//   })
+//   .put(function(req, res) {
+//     Customer.findById(req.params.customer_id).then(function(customer) {
+//       customer.update(_.pick(req.body, ['name', 'address', 'phone'])).then(function(customer) {
+//         res.json(customer);
+//       });
+//     });
+//   })
+//   .delete(function(req, res) {
+//     Customer.findById(req.params.customer_id).then(function(customer) {
+//       customer.destroy().then(function(customer) {
+//         res.json(customer);
+//       });
+//     });
+//   });
+//
+// // PRODUCTS API
+//
+// app.route('/api/products')
+//   .get(function(req, res) {
+//     Product.findAll().then(function(products) {
+//       res.json(products);
+//     })
+//   })
+//   .post(function(req, res) {
+//     var product = Product.build(_.pick(req.body, ['name', 'price']));
+//     product.save().then(function(product){
+//       res.json(product);
+//     });
+//   });
+//
+// app.route('/api/products/:product_id')
+//   .get(function(req, res) {
+//     Product.findById(req.params.product_id).then(function(product) {
+//       res.json(product);
+//     });
+//   })
+//   .put(function(req, res) {
+//     Product.findById(req.params.product_id).then(function(product) {
+//       product.update(_.pick(req.body, ['name', 'price'])).then(function(product) {
+//         res.json(product);
+//       });
+//     });
+//   })
+//   .delete(function(req, res) {
+//     Product.findById(req.params.product_id).then(function(product) {
+//       product.destroy().then(function(product) {
+//         res.json(product);
+//       });
+//     });
+//   });
+//
+//
+// // INVOICES API
+//
+// app.route('/api/invoices')
+//   .get(function(req, res) {
+//     Invoice.findAll().then(function(invoices) {
+//       res.json(invoices);
+//     })
+//   })
+//   .post(function(req, res) {
+//     var invoice = Invoice.build(_.pick(req.body, ['customer_id', 'discount', 'total']));
+//     invoice.save().then(function(invoice){
+//       res.json(invoice);
+//     });
+//   });
+//
+// app.route('/api/invoices/:invoice_id')
+//   .get(function(req, res) {
+//     Invoice.findById(req.params.invoice_id).then(function(invoice) {
+//       res.json(invoice);
+//     });
+//   })
+//   .put(function(req, res) {
+//     Invoice.findById(req.params.invoice_id).then(function(invoice) {
+//       invoice.update(_.pick(req.body, ['customer_id', 'discount', 'total'])).then(function(invoice) {
+//         res.json(invoice);
+//       });
+//     });
+//   })
+//   .delete(function(req, res) {
+//     Invoice.findById(req.params.invoice_id).then(function(invoice) {
+//       invoice.destroy().then(function(invoice) {
+//         res.json(invoice);
+//       });
+//     });
+//   });
+//
+//
+// // INVOICE ITEMS API
+//
+// app.route('/api/invoices/:invoice_id/items')
+//   .get(function(req, res) {
+//     InvoiceItem.findAll({where: { invoice_id: req.params.invoice_id }}).then(function(invoice_items) {
+//       res.json(invoice_items);
+//     })
+//   })
+//   .post(function(req, res) {
+//     var invoice_item = InvoiceItem.build(_.pick(req.body, ['product_id', 'quantity']));
+//     invoice_item.set('invoice_id', req.params.invoice_id);
+//     invoice_item.save().then(function(invoice_item){
+//       res.json(invoice_item);
+//     });
+//   });
+//
+// app.route('/api/invoices/:invoice_id/items/:id')
+//   .get(function(req, res) {
+//     InvoiceItem.findById(req.params.id).then(function(invoice_item) {
+//       res.json(invoice_item);
+//     });
+//   })
+//   .put(function(req, res) {
+//     InvoiceItem.findById(req.params.id).then(function(invoice_item) {
+//       invoice_item.update(_.pick(req.body, ['product_id', 'quantity'])).then(function(invoice_item) {
+//         res.json(invoice_item);
+//       });
+//     });
+//   })
+//   .delete(function(req, res) {
+//     InvoiceItem.findById(req.params.id).then(function(invoice_item) {
+//       invoice_item.destroy().then(function(invoice_item) {
+//         res.json(invoice_item);
+//       });
+//     });
+//   });
 
-app.route('/api/customers/:customer_id')
-  .get(function(req, res) {
-    Customer.findById(req.params.customer_id).then(function(customer) {
-      res.json(customer);
-    });
-  })
-  .put(function(req, res) {
-    Customer.findById(req.params.customer_id).then(function(customer) {
-      customer.update(_.pick(req.body, ['name', 'address', 'phone'])).then(function(customer) {
-        res.json(customer);
-      });
-    });
-  })
-  .delete(function(req, res) {
-    Customer.findById(req.params.customer_id).then(function(customer) {
-      customer.destroy().then(function(customer) {
-        res.json(customer);
-      });
-    });
-  });
 
-// PRODUCTS API
-
-app.route('/api/products')
-  .get(function(req, res) {
-    Product.findAll().then(function(products) {
-      res.json(products);
-    })
-  })
-  .post(function(req, res) {
-    var product = Product.build(_.pick(req.body, ['name', 'price']));
-    product.save().then(function(product){
-      res.json(product);
-    });
-  });
-
-app.route('/api/products/:product_id')
-  .get(function(req, res) {
-    Product.findById(req.params.product_id).then(function(product) {
-      res.json(product);
-    });
-  })
-  .put(function(req, res) {
-    Product.findById(req.params.product_id).then(function(product) {
-      product.update(_.pick(req.body, ['name', 'price'])).then(function(product) {
-        res.json(product);
-      });
-    });
-  })
-  .delete(function(req, res) {
-    Product.findById(req.params.product_id).then(function(product) {
-      product.destroy().then(function(product) {
-        res.json(product);
-      });
-    });
-  });
-
-
-// INVOICES API
-
-app.route('/api/invoices')
-  .get(function(req, res) {
-    Invoice.findAll().then(function(invoices) {
-      res.json(invoices);
-    })
-  })
-  .post(function(req, res) {
-    var invoice = Invoice.build(_.pick(req.body, ['customer_id', 'discount', 'total']));
-    invoice.save().then(function(invoice){
-      res.json(invoice);
-    });
-  });
-
-app.route('/api/invoices/:invoice_id')
-  .get(function(req, res) {
-    Invoice.findById(req.params.invoice_id).then(function(invoice) {
-      res.json(invoice);
-    });
-  })
-  .put(function(req, res) {
-    Invoice.findById(req.params.invoice_id).then(function(invoice) {
-      invoice.update(_.pick(req.body, ['customer_id', 'discount', 'total'])).then(function(invoice) {
-        res.json(invoice);
-      });
-    });
-  })
-  .delete(function(req, res) {
-    Invoice.findById(req.params.invoice_id).then(function(invoice) {
-      invoice.destroy().then(function(invoice) {
-        res.json(invoice);
-      });
-    });
-  });
-
-
-// INVOICE ITEMS API
-
-app.route('/api/invoices/:invoice_id/items')
-  .get(function(req, res) {
-    InvoiceItem.findAll({where: { invoice_id: req.params.invoice_id }}).then(function(invoice_items) {
-      res.json(invoice_items);
-    })
-  })
-  .post(function(req, res) {
-    var invoice_item = InvoiceItem.build(_.pick(req.body, ['product_id', 'quantity']));
-    invoice_item.set('invoice_id', req.params.invoice_id);
-    invoice_item.save().then(function(invoice_item){
-      res.json(invoice_item);
-    });
-  });
-
-app.route('/api/invoices/:invoice_id/items/:id')
-  .get(function(req, res) {
-    InvoiceItem.findById(req.params.id).then(function(invoice_item) {
-      res.json(invoice_item);
-    });
-  })
-  .put(function(req, res) {
-    InvoiceItem.findById(req.params.id).then(function(invoice_item) {
-      invoice_item.update(_.pick(req.body, ['product_id', 'quantity'])).then(function(invoice_item) {
-        res.json(invoice_item);
-      });
-    });
-  })
-  .delete(function(req, res) {
-    InvoiceItem.findById(req.params.id).then(function(invoice_item) {
-      invoice_item.destroy().then(function(invoice_item) {
-        res.json(invoice_item);
-      });
-    });
-  });
+app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'static', 'index.html'));
+});
 
 
 const webpack = require('webpack');
@@ -323,14 +329,14 @@ if (isDeveloping) {
   app.use(middleware);
   app.use(webpackHotMiddleware(compiler));
   app.get('*', function response(req, res) {
-    res.write(middleware.fileSystem.readFileSync(path.join(__dirname, 'public/index.html')));
+    res.write(middleware.fileSystem.readFileSync(path.join(__dirname, 'static', 'index.html')));
     res.end();
   });
 } else {
-  app.use(express.static(__dirname + '/public'));
-  app.get('*', function response(req, res) {
-    res.sendFile(path.join(__dirname, 'public/index.html'));
-  });
+    app.use(express.static(path.join(__dirname, 'public')));
+    app.get('*', function response(req, res) {
+        res.sendFile(path.join(__dirname, 'static', 'index.html'));
+    });
 }
 
 // Starting express server
