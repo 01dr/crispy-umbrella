@@ -6,12 +6,12 @@
 	"author": "Space Invader <amazing.space.invader@gmail.com>",
 	"license": "MIT",
 	"scripts": {
-		"start3": "node new-server.js",
-		"start2": "node server.js",
-		"start": "NODE_ENV=development webpack-dev-server",
+		"start": "babel-node server/server.js --presets es2015,stage-0",
+		"start-webpack": "NODE_ENV=development webpack-dev-server",
 		"build": "NODE_ENV=production webpack -p"
 	},
 	"dependencies": {
+		"babel-cli": "^6.24.0",
 		"babel-core": "^6.22.1",
 		"babel-eslint": "^7.1.1",
 		"babel-loader": "^6.2.10",
@@ -31,6 +31,7 @@
 		"express": "^4.15.2",
 		"extract-text-webpack-plugin": "^v2.0.0-rc.3",
 		"file-loader": "^0.10.0",
+		"history": "^4.6.0",
 		"image-webpack-loader": "^3.2.0",
 		"lodash": "^4.17.4",
 		"normalize.css": "^5.0.0",
