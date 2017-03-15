@@ -5,8 +5,8 @@
 
 import React, { Component } from 'react';
 import {
-    Modal, ModalBody, ModalHeader, ModalFooter, ModalTitle, Button,
-    FormGroup, ControlLabel, FormControl
+    Modal, ModalBody, ModalHeader, ModalFooter, ModalTitle,
+    Button, FormGroup, ControlLabel, FormControl
 } from 'react-bootstrap';
 
 import { closeModalAddCustomer, addCustomer } from '../../actions/customersActions';

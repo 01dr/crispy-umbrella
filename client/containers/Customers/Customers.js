@@ -10,6 +10,7 @@ import { Grid, Row, Col, PageHeader, Button } from 'react-bootstrap';
 import Menu from '../../components/Menu/Menu';
 import CustomersTable from '../../components/CustomersTable/CustomersTable';
 import ModalAddCustomer from '../../components/ModalAddCustomer/ModalAddCustomer';
+import ModalDeleteCustomer from '../../components/ModalDeleteCustomer/ModalDeleteCustomer';
 
 import { fetchCustomers, openModalAddCustomer } from '../../actions/customersActions';
 
@@ -20,7 +21,13 @@ class Customers extends Component {
     }
 
     render() {
-        const { dispatch, customersList, modalAddCustomer } = this.props;
+        const {
+            dispatch,
+            customersList,
+            modalAddCustomer,
+            modalDeleteCustomerIsOpen,
+            modalDeleteCustomerCurrent
+        } = this.props;
 
         return (
             <div>
@@ -35,12 +42,18 @@ class Customers extends Component {
                     </Row>
                     <Row>
                         <Col xs={12}>
-                            <CustomersTable customersList={customersList}/>
+                            <CustomersTable customersList={customersList} dispatch={dispatch}/>
                         </Col>
                     </Row>
                 </Grid>
 
-                <ModalAddCustomer open={modalAddCustomer} dispatch={dispatch}/>
+                <ModalAddCustomer
+                    open={modalAddCustomer}
+                    dispatch={dispatch}/>
+                <ModalDeleteCustomer
+                    open={modalDeleteCustomerIsOpen}
+                    customer={modalDeleteCustomerCurrent}
+                    dispatch={dispatch}/>
             </div>
         )
     }
@@ -48,5 +61,7 @@ class Customers extends Component {
 
 export default connect(state => ({
     customersList: state.customersList,
-    modalAddCustomer: state.modalAddCustomer
+    modalAddCustomer: state.modalAddCustomer,
+    modalDeleteCustomerIsOpen: state.modalDeleteCustomer.open,
+    modalDeleteCustomerCurrent: state.modalDeleteCustomer.customer
 }))(Customers);
