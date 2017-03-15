@@ -6,38 +6,36 @@
 import React from 'react';
 import { Table, Button, ButtonGroup } from 'react-bootstrap';
 
-import { openModalDeleteCustomer, openModalEditCustomer } from '../../actions/customersActions';
+import { openModalDeleteProduct, openModalEditProduct } from '../../actions/productsActions';
 
-const CustomersTable = props => (
+const ProductsTable = props => (
     <Table responsive>
         <thead>
             <tr>
                 <th>#</th>
                 <th>Name</th>
-                <th>Address</th>
-                <th>Phone</th>
+                <th>Price</th>
                 <th/>
             </tr>
         </thead>
 
         <tbody>
-            {props.customersList.map(item => (
+            {props.productsList.map(item => (
                 <tr key={item.id}>
                     <td>{item.id}</td>
                     <td>{item.name}</td>
-                    <td>{item.address}</td>
-                    <td>{item.phone}</td>
+                    <td>{item.price}</td>
                     <td>
                         <ButtonGroup>
                             <Button
                                 bsStyle="info"
                                 bsSize="xsmall"
-                                onClick={() => props.dispatch(openModalEditCustomer(item))}
+                                onClick={() => props.dispatch(openModalEditProduct(item))}
                             >Edit</Button>
                             <Button
                                 bsStyle="danger"
                                 bsSize="xsmall"
-                                onClick={() => props.dispatch(openModalDeleteCustomer(item))}
+                                onClick={() => props.dispatch(openModalDeleteProduct(item))}
                             >Delete</Button>
                         </ButtonGroup>
                     </td>
@@ -47,4 +45,4 @@ const CustomersTable = props => (
     </Table>
 );
 
-export default CustomersTable;
+export default ProductsTable;

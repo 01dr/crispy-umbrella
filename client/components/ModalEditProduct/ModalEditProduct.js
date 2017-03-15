@@ -9,24 +9,23 @@ import {
     Button, FormGroup, ControlLabel, FormControl
 } from 'react-bootstrap';
 
-import { closeModalEditCustomer, updateCustomer } from '../../actions/customersActions';
+import { closeModalEditProduct, updateProduct } from '../../actions/productsActions';
 
-export default class ModalEditCustomer extends Component {
+export default class ModalEditProduct extends Component {
     constructor(props, context) {
         super(props, context);
 
         this.state = {
             id: '',
             name: '',
-            address: '',
-            phone: ''
+            price: ''
         }
     }
 
     componentWillReceiveProps(nextProps) {
-        const { id, name, address, phone } = nextProps.customer;
-        if (name || address || phone) {
-            this.setState({ id, name, address, phone });
+        const { id, name, price } = nextProps.product;
+        if (name || price) {
+            this.setState({ id, name, price });
         }
     }
 
@@ -34,30 +33,26 @@ export default class ModalEditCustomer extends Component {
         this.setState({ name: e.target.value });
     }
 
-    handleAddressChange(e) {
-        this.setState({ address: e.target.value });
-    }
-
-    handlePhoneChange(e) {
-        this.setState({ phone: e.target.value });
+    handlePriceChange(e) {
+        this.setState({ price: e.target.value });
     }
 
     handleSubmit(e) {
         const { dispatch } = this.props;
-        const { id, name, address, phone } = this.state;
+        const { id, name, price } = this.state;
         e.preventDefault();
-        dispatch(updateCustomer({ id, name, address, phone }));
-        dispatch(closeModalEditCustomer());
+        dispatch(updateProduct({ id, name, price }));
+        dispatch(closeModalEditProduct());
     }
 
     render() {
         const { dispatch, open } = this.props;
-        const { name, address, phone } = this.state;
+        const { name, price } = this.state;
 
         return (
             <Modal show={open}>
                 <ModalHeader>
-                    <ModalTitle>Edit customer</ModalTitle>
+                    <ModalTitle>Edit product</ModalTitle>
                 </ModalHeader>
 
                 <ModalBody>
@@ -67,26 +62,17 @@ export default class ModalEditCustomer extends Component {
                             <FormControl
                                 type='text'
                                 value={name}
-                                placeholder='John Doe'
+                                placeholder='Phone case'
                                 onChange={::this.handleNameChange}
                             />
                         </FormGroup>
                         <FormGroup>
-                            <ControlLabel>Address</ControlLabel>
+                            <ControlLabel>Price</ControlLabel>
                             <FormControl
                                 type='text'
-                                value={address}
-                                placeholder='788, 21 st, New York, NY, USA'
-                                onChange={::this.handleAddressChange}
-                            />
-                        </FormGroup>
-                        <FormGroup>
-                            <ControlLabel>Phone</ControlLabel>
-                            <FormControl
-                                type='text'
-                                value={phone}
-                                placeholder='+19834729834'
-                                onChange={::this.handlePhoneChange}
+                                value={price}
+                                placeholder='9.99'
+                                onChange={::this.handlePriceChange}
                             />
                         </FormGroup>
                     </form>
@@ -94,7 +80,7 @@ export default class ModalEditCustomer extends Component {
 
                 <ModalFooter>
                     <Button onClick={::this.handleSubmit} bsStyle='primary'>Update</Button>
-                    <Button onClick={ () => dispatch(closeModalEditCustomer()) }>Cancel</Button>
+                    <Button onClick={ () => dispatch(closeModalEditProduct()) }>Cancel</Button>
                 </ModalFooter>
             </Modal>
         )

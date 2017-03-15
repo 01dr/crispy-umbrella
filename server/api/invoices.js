@@ -7,7 +7,7 @@ import * as db from '../db';
 
 export const getAllInvoices = (request, response) => {
     db.Invoice
-        .getAll()
+        .findAll()
         .then(invoices => {
             response.json(invoices);
         });

@@ -7,23 +7,33 @@ import {
     FETCH_CUSTOMERS_SUCCESS,
     ADD_CUSTOMER_SUCCESS,
     DELETE_CUSTOMER_SUCCESS,
+    UPDATE_CUSTOMER_SUCCESS,
     OPEN_MODAL_ADD_CUSTOMER, CLOSE_MODAL_ADD_CUSTOMER,
-    OPEN_MODAL_DELETE_CUSTOMER, CLOSE_MODAL_DELETE_CUSTOMER
+    OPEN_MODAL_DELETE_CUSTOMER, CLOSE_MODAL_DELETE_CUSTOMER,
+    OPEN_MODAL_EDIT_CUSTOMER, CLOSE_MODAL_EDIT_CUSTOMER
 } from '../actions/constants';
 
 const customersList = (state = [], action) => {
+    const newState = Array.from(state);
+
     switch (action.type) {
     case FETCH_CUSTOMERS_SUCCESS:
         return action.customers;
+
     case ADD_CUSTOMER_SUCCESS:
-        const stateAfterAdd = Array.from(state);
-        stateAfterAdd.push(action.customer);
-        return stateAfterAdd;
+        newState.push(action.customer);
+        return newState;
+
     case DELETE_CUSTOMER_SUCCESS:
-        const stateAfterDelete = Array.from(state);
-        const index = stateAfterDelete.indexOf(action.customer);
-        stateAfterDelete.splice(index, 1);
-        return stateAfterDelete;
+        newState.splice(newState.indexOf(action.customer), 1);
+        return newState;
+
+    case UPDATE_CUSTOMER_SUCCESS:
+        return newState.map(item =>
+            (item.id === action.customer.id
+                ? action.customer
+                : item));
+
     default:
         return state;
     }
@@ -46,7 +56,7 @@ const modalDeleteCustomer = (state = {
 }, action) => {
     switch (action.type) {
     case OPEN_MODAL_DELETE_CUSTOMER:
-        return { open: true, customer: action.customer};
+        return { open: true, customer: action.customer };
     case CLOSE_MODAL_DELETE_CUSTOMER:
         return { open: false, customer: {} };
     default:
@@ -54,4 +64,18 @@ const modalDeleteCustomer = (state = {
     }
 }
 
-export default { customersList, modalAddCustomer, modalDeleteCustomer }
+const modalEditCustomer = (state = {
+    open: false,
+    customer: {}
+}, action) => {
+    switch (action.type) {
+    case OPEN_MODAL_EDIT_CUSTOMER:
+        return { open: true, customer: action.customer };
+    case CLOSE_MODAL_EDIT_CUSTOMER:
+        return { open: false, customer: {} };
+    default:
+        return state;
+    }
+}
+
+export default { customersList, modalAddCustomer, modalDeleteCustomer, modalEditCustomer }

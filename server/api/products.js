@@ -7,7 +7,7 @@ import * as db from '../db';
 
 export const getAllProducts = (request, response) => {
     db.Product
-        .getAll()
+        .findAll()
         .then(products => {
             response.json(products);
         });

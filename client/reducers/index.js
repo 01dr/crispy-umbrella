@@ -6,5 +6,6 @@
 import objectAssign from 'object-assign';
 
 import customers from './customers';
+import products from './products';
 
-export default objectAssign({}, customers);
+export default objectAssign({}, customers, products);

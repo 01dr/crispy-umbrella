@@ -9,6 +9,7 @@ import {
     FETCH_CUSTOMERS_REQUEST, FETCH_CUSTOMERS_SUCCESS, FETCH_CUSTOMERS_FAILURE,
     ADD_CUSTOMER_REQUEST, ADD_CUSTOMER_SUCCESS, ADD_CUSTOMER_FAILURE,
     DELETE_CUSTOMER_REQUEST, DELETE_CUSTOMER_SUCCESS, DELETE_CUSTOMER_FAILURE,
+    UPDATE_CUSTOMER_REQUEST, UPDATE_CUSTOMER_SUCCESS, UPDATE_CUSTOMER_FAILURE,
     OPEN_MODAL_ADD_CUSTOMER, CLOSE_MODAL_ADD_CUSTOMER,
     OPEN_MODAL_DELETE_CUSTOMER, CLOSE_MODAL_DELETE_CUSTOMER,
     OPEN_MODAL_EDIT_CUSTOMER, CLOSE_MODAL_EDIT_CUSTOMER
@@ -69,4 +70,26 @@ export const deleteCustomer = id => dispatch => {
             (error
                 ? dispatch(deleteCustomerFailure(error))
                 : dispatch(deleteCustomerSuccess(JSON.parse(result.text)))));
+}
+
+// MODAL EDIT CUSTOMER
+export const openModalEditCustomer = customer => ({ type: OPEN_MODAL_EDIT_CUSTOMER, customer });
+export const closeModalEditCustomer = () => ({ type: CLOSE_MODAL_EDIT_CUSTOMER });
+
+// UPDATE CUSTOMER
+const updateCustomerRequest = () => ({ type: UPDATE_CUSTOMER_REQUEST });
+const updateCustomerSuccess = customer => ({ type: UPDATE_CUSTOMER_SUCCESS, customer });
+const updateCustomerFailure = error => ({ type: UPDATE_CUSTOMER_FAILURE, error });
+
+export const updateCustomer = customer => dispatch => {
+    dispatch(updateCustomerRequest());
+    const { id } = customer;
+    superagent
+        .put(`${API_CUSTOMERS}/${id}`)
+        .set('Accept', 'application/json')
+        .send(customer)
+        .end((error, result) =>
+            (error
+                ? dispatch(updateCustomerFailure(error))
+                : dispatch(updateCustomerSuccess(JSON.parse(result.text)))));
 }

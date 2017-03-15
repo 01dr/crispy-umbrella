@@ -11,6 +11,7 @@ import Menu from '../../components/Menu/Menu';
 import CustomersTable from '../../components/CustomersTable/CustomersTable';
 import ModalAddCustomer from '../../components/ModalAddCustomer/ModalAddCustomer';
 import ModalDeleteCustomer from '../../components/ModalDeleteCustomer/ModalDeleteCustomer';
+import ModalEditCustomer from '../../components/ModalEditCustomer/ModalEditCustomer';
 
 import { fetchCustomers, openModalAddCustomer } from '../../actions/customersActions';
 
@@ -26,7 +27,9 @@ class Customers extends Component {
             customersList,
             modalAddCustomer,
             modalDeleteCustomerIsOpen,
-            modalDeleteCustomerCurrent
+            modalDeleteCustomerCurrent,
+            modalEditCustomerIsOpen,
+            modalEditCustomerCurrent
         } = this.props;
 
         return (
@@ -42,7 +45,9 @@ class Customers extends Component {
                     </Row>
                     <Row>
                         <Col xs={12}>
-                            <CustomersTable customersList={customersList} dispatch={dispatch}/>
+                            <CustomersTable
+                                customersList={customersList}
+                                dispatch={dispatch}/>
                         </Col>
                     </Row>
                 </Grid>
@@ -54,6 +59,10 @@ class Customers extends Component {
                     open={modalDeleteCustomerIsOpen}
                     customer={modalDeleteCustomerCurrent}
                     dispatch={dispatch}/>
+                <ModalEditCustomer
+                    open={modalEditCustomerIsOpen}
+                    customer={modalEditCustomerCurrent}
+                    dispatch={dispatch}/>
             </div>
         )
     }
@@ -63,5 +72,7 @@ export default connect(state => ({
     customersList: state.customersList,
     modalAddCustomer: state.modalAddCustomer,
     modalDeleteCustomerIsOpen: state.modalDeleteCustomer.open,
-    modalDeleteCustomerCurrent: state.modalDeleteCustomer.customer
+    modalDeleteCustomerCurrent: state.modalDeleteCustomer.customer,
+    modalEditCustomerIsOpen: state.modalEditCustomer.open,
+    modalEditCustomerCurrent: state.modalEditCustomer.customer
 }))(Customers);
