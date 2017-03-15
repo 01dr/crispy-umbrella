@@ -9,8 +9,9 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col, PageHeader, Button } from 'react-bootstrap';
 import Menu from '../../components/Menu/Menu';
 import CustomersTable from '../../components/CustomersTable/CustomersTable';
+import ModalAddCustomer from '../../components/ModalAddCustomer/ModalAddCustomer';
 
-import { fetchCustomers } from '../../actions/customersActions';
+import { fetchCustomers, openModalAddCustomer } from '../../actions/customersActions';
 
 class Customers extends Component {
     componentDidMount() {
@@ -19,7 +20,7 @@ class Customers extends Component {
     }
 
     render() {
-        const { customersList } = this.props;
+        const { dispatch, customersList, modalAddCustomer } = this.props;
 
         return (
             <div>
@@ -28,7 +29,7 @@ class Customers extends Component {
                     <Row>
                         <Col xs={12}>
                             <PageHeader>
-                                Customer list <Button>Create</Button>
+                                Customer list <Button onClick={ () => dispatch(openModalAddCustomer()) }>Create</Button>
                             </PageHeader>
                         </Col>
                     </Row>
@@ -38,11 +39,14 @@ class Customers extends Component {
                         </Col>
                     </Row>
                 </Grid>
+
+                <ModalAddCustomer open={modalAddCustomer} dispatch={dispatch}/>
             </div>
         )
     }
 }
 
 export default connect(state => ({
-    customersList: state.customersList
+    customersList: state.customersList,
+    modalAddCustomer: state.modalAddCustomer
 }))(Customers);
