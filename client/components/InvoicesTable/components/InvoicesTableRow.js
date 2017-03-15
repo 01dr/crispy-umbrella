@@ -26,12 +26,13 @@ export default class InvoicesTableRow extends Component {
             .end((error, result) =>
                 (error
                     ? console.log(error)
-                    : this.setState({ customer: JSON.parse(result.text) })));
+                    : this.setState({ customer: { name: 'namename' } })));
+                    // : this.setState({ customer: JSON.parse(result.text) })));
     }
 
     render() {
         const { dispatch, item } = this.props;
-        const { id, customer_id, discount, total } = item;
+        const { id, discount, total } = item;
         const { customer } = this.state;
 
         return (
