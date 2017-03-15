@@ -127,13 +127,13 @@ sequelize
         });
 
         Invoice.create({
-            customer_id: 96,
+            customer_id: 108,
             discount: 225,
             total: 30
         });
 
         Invoice.create({
-            customer_id: 96,
+            customer_id: 108,
             discount: 145,
             total: 15
         });

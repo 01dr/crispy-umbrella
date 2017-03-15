@@ -4,9 +4,8 @@
  */
 
 import React from 'react';
-import { Table, Button, ButtonGroup } from 'react-bootstrap';
-
-import { openModalDeleteInvoice } from '../../actions/invoicesActions';
+import { Table } from 'react-bootstrap';
+import InvoicesTableRow from './components/InvoicesTableRow';
 
 const InvoicesTable = props => (
     <Table responsive>
@@ -22,25 +21,11 @@ const InvoicesTable = props => (
 
         <tbody>
             {props.invoicesList.map(item => (
-                <tr key={item.id}>
-                    <td>{item.id}</td>
-                    <td>{item.customer_id}</td>
-                    <td>{item.discount}</td>
-                    <td>{item.total}</td>
-                    <td>
-                        <ButtonGroup>
-                            <Button
-                                bsStyle="info"
-                                bsSize="xsmall"
-                            >Edit</Button>
-                            <Button
-                                bsStyle="danger"
-                                bsSize="xsmall"
-                                onClick={() => props.dispatch(openModalDeleteInvoice(item))}
-                            >Delete</Button>
-                        </ButtonGroup>
-                    </td>
-                </tr>
+                <InvoicesTableRow
+                    key={item.id}
+                    item={item}
+                    dispatch={props.dispatch}
+                />
             ))}
         </tbody>
     </Table>
