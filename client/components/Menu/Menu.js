@@ -4,11 +4,10 @@
  */
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router';
+import { LinkContainer } from 'react-router-bootstrap';
 
-import Navbar from 'react-bootstrap/lib/Navbar';
-import Nav from 'react-bootstrap/lib/Nav';
-import RouterLink from '../common/RouterLink/RouterLink';
+import { Navbar, Nav, NavItem } from 'react-bootstrap';
 
 const Menu = () => (
     <Navbar>
@@ -18,9 +17,10 @@ const Menu = () => (
             </Navbar.Brand>
         </Navbar.Header>
         <Nav>
-            <RouterLink to="/invoices">Invoices</RouterLink>
-            <RouterLink to="/products">Products</RouterLink>
-            <RouterLink to="/customers">Customers</RouterLink>
+            <LinkContainer to="/invoices"><NavItem>Invoices</NavItem></LinkContainer>
+            <LinkContainer to="/products"><NavItem>Products</NavItem></LinkContainer>
+            <LinkContainer to="/customers"><NavItem>Customers</NavItem></LinkContainer>
+            <LinkContainer to="/invoices/add"><NavItem>add invoice</NavItem></LinkContainer>
         </Nav>
     </Navbar>
 );

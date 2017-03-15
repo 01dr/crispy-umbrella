@@ -4,7 +4,7 @@
  */
 
 import React from 'react';
-import { Route, Link } from 'react-router-dom';
+import { Route, Link } from 'react-router';
 
 const RouterLink = ({ to, children }) => (
     <Route path={to} children={({ match }) => (

@@ -4,13 +4,14 @@
  */
 
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route } from 'react-router';
 
 import Main from './containers/Main/Main';
 
 import Customers from './containers/Customers/Customers';
 import Products from './containers/Products/Products';
 import Invoices from './containers/Invoices/Invoices';
+import NewInvoice from './containers/NewInvoice/NewInvoice';
 
 export default (
     <div>
@@ -18,6 +19,7 @@ export default (
 
         <Route path='/customers' component={Customers}/>
         <Route path='/products' component={Products}/>
-        <Route path='/invoices' component={Invoices}/>
+        <Route exact path='/invoices' component={Invoices}/>
+        <Route path='/invoices/add' component={NewInvoice}/>
     </div>
 );

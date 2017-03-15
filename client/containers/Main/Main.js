@@ -5,7 +5,6 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import '../common/global.pcss';
 
 import Menu from '../../components/Menu/Menu';
 
