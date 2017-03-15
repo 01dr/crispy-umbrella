@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col, PageHeader, Button } from 'react-bootstrap';
 import Menu from '../../components/Menu/Menu';
 import InvoicesTable from '../../components/InvoicesTable/InvoicesTable';
+import ModalDeleteInvoice from '../../components/ModalDeleteInvoice/ModalDeleteInvoice';
 
 import { fetchInvoices } from '../../actions/invoicesActions';
 
@@ -19,7 +20,12 @@ class Invoices extends Component {
     }
 
     render() {
-        const { invoicesList } = this.props;
+        const {
+            dispatch,
+            invoicesList,
+            modalDeleteInvoiceIsOpen,
+            modalDeleteInvoiceCurrent
+        } = this.props;
 
         return (
             <div>
@@ -34,15 +40,23 @@ class Invoices extends Component {
                     </Row>
                     <Row>
                         <Col xs={12}>
-                            <InvoicesTable invoicesList={invoicesList}/>
+                            <InvoicesTable invoicesList={invoicesList} dispatch={dispatch}/>
                         </Col>
                     </Row>
                 </Grid>
+
+                <ModalDeleteInvoice
+                    open={modalDeleteInvoiceIsOpen}
+                    invoice={modalDeleteInvoiceCurrent}
+                    dispatch={dispatch}
+                />
             </div>
         )
     }
 }
 
 export default connect(state => ({
-    invoicesList: state.invoicesList
+    invoicesList: state.invoicesList,
+    modalDeleteInvoiceIsOpen: state.modalDeleteInvoice.open,
+    modalDeleteInvoiceCurrent: state.modalDeleteInvoice.invoice,
 }))(Invoices);

@@ -4,17 +4,39 @@
  */
 
 import {
-    FETCH_INVOICES_SUCCESS
+    FETCH_INVOICES_SUCCESS,
+    DELETE_INVOICE_SUCCESS,
+    OPEN_MODAL_DELETE_INVOICE, CLOSE_MODAL_DELETE_INVOICE
 } from '../actions/constants';
 
 const invoicesList = (state = [], action) => {
+    const newState = Array.from(state);
+
     switch (action.type) {
     case FETCH_INVOICES_SUCCESS:
         return action.invoices;
+
+    case DELETE_INVOICE_SUCCESS:
+        newState.splice(newState.indexOf(action.invoice), 1);
+        return newState;
 
     default:
         return state;
     }
 }
 
-export default { invoicesList }
+const modalDeleteInvoice = (state = {
+    open: false,
+    invoice: {}
+}, action) => {
+    switch (action.type) {
+    case OPEN_MODAL_DELETE_INVOICE:
+        return { open: true, invoice: action.invoice };
+    case CLOSE_MODAL_DELETE_INVOICE:
+        return { open: false, invoice: {} };
+    default:
+        return state;
+    }
+}
+
+export default { invoicesList, modalDeleteInvoice }
