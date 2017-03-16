@@ -72,7 +72,6 @@ app.route('/api/v1/invoices/:invoice_id')
     .delete(invoicesAPI.deleteInvoice);
 
 // UNIVERSAL ENDPOINT
-// TODO SSR!
 app.get('*', universal);
 
 app.listen(port);

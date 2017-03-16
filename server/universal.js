@@ -47,7 +47,7 @@ function renderHTML(componentHTML) {
       <head>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1.0">
-          <title>Hello React</title>
+          <title>SSR</title>
           <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
           <link rel="stylesheet" href="${assetUrl}styles.css">
       </head>
