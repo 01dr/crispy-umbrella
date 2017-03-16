@@ -12,6 +12,7 @@ import universal from './universal';
 import * as customersAPI from './api/customers';
 import * as productsAPI from './api/products';
 import * as invoicesAPI from './api/invoices';
+import * as invoiceItemsAPI from './api/invoiceItems';
 
 require('./db');
 
@@ -70,6 +71,16 @@ app.route('/api/v1/invoices/:invoice_id')
     .get(invoicesAPI.getInvoice)
     .put(invoicesAPI.patchInvoice)
     .delete(invoicesAPI.deleteInvoice);
+
+// REST INVOICE ITEMS
+app.route('/api/v1/invoices/:invoice_id/items')
+    .get(invoiceItemsAPI.getAllInvoiceItems)
+    .post(invoiceItemsAPI.addInvoiceItem);
+
+app.route('/api/v1/invoices/:invoice_id/items/:id')
+    .get(invoiceItemsAPI.getInvoiceItem)
+    .put(invoiceItemsAPI.patchInvoiceItem)
+    .delete(invoiceItemsAPI.deleteInvoiceItem);
 
 // UNIVERSAL ENDPOINT
 app.get('*', universal);

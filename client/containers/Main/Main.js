@@ -6,6 +6,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+import { Grid, Row, Col, PageHeader, Button, Jumbotron } from 'react-bootstrap';
 import Menu from '../../components/Menu/Menu';
 
 class Main extends Component {
@@ -13,7 +14,16 @@ class Main extends Component {
         return (
             <div>
                 <Menu/>
-                <div>sup!</div>
+                <Grid>
+                    <Row>
+                        <Col xs={12}>
+                            <Jumbotron>
+                                <h1>Ну привет</h1>
+                                <p>Надо же заполнить как-то эту страницу, ведь так? Она как раз статичная и никто не заметит, как в фоне грузится жирненький бандл :)</p>
+                            </Jumbotron>
+                        </Col>
+                    </Row>
+                </Grid>
             </div>
         )
     }
