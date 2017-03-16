@@ -125,17 +125,5 @@ sequelize
             name: 'Neon Green Hat',
             price: 21.99
         });
-
-        Invoice.create({
-            customer_id: 108,
-            discount: 225,
-            total: 30
-        });
-
-        Invoice.create({
-            customer_id: 108,
-            discount: 145,
-            total: 15
-        });
     })
     .catch(e => { console.log('ERROR SYNCING WITH DB', e) });
