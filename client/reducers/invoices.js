@@ -17,8 +17,7 @@ const invoicesList = (state = [], action) => {
         return action.invoices;
 
     case DELETE_INVOICE_SUCCESS:
-        newState.splice(newState.indexOf(action.invoice), 1);
-        return newState;
+        return newState.filter(item => item.id !== action.invoice.id);
 
     default:
         return state;

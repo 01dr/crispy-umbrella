@@ -25,8 +25,7 @@ const productsList = (state = [], action) => {
         return newState;
 
     case DELETE_PRODUCT_SUCCESS:
-        newState.splice(newState.indexOf(action.product), 1);
-        return newState;
+        return newState.filter(item => item.id !== action.product.id);
 
     case UPDATE_PRODUCT_SUCCESS:
         return newState.map(item =>

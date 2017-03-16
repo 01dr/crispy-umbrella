@@ -21,13 +21,12 @@ export default class InvoicesTableRow extends Component {
     componentDidMount() {
         const { customer_id } = this.props.item;
         superagent
-            .get(`/api/v1/customers/${customer_id}`) // это будет работать, если правильно расставлять отношения
+            .get(`/api/v1/customers/${customer_id}`)
             .set('Accept', 'application/json')
             .end((error, result) =>
                 (error
                     ? console.log(error)
-                    : this.setState({ customer: { name: 'namename' } })));
-                    // : this.setState({ customer: JSON.parse(result.text) })));
+                    : this.setState({ customer: JSON.parse(result.text) })));
     }
 
     render() {

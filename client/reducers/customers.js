@@ -25,8 +25,7 @@ const customersList = (state = [], action) => {
         return newState;
 
     case DELETE_CUSTOMER_SUCCESS:
-        newState.splice(newState.indexOf(action.customer), 1);
-        return newState;
+        return newState.filter(item => item.id !== action.customer.id);
 
     case UPDATE_CUSTOMER_SUCCESS:
         return newState.map(item =>

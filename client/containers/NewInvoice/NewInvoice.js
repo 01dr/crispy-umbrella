@@ -6,12 +6,16 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import superagent from 'superagent';
+import promise from 'promise';
+import pagent from 'superagent-promise';
 import objectAssign from 'object-assign';
 
 import { Grid, Row, Col, PageHeader, Panel, FormGroup, ControlLabel, FormControl, InputGroup, Button, Table } from 'react-bootstrap';
 import Select from 'react-select';
 import 'react-select/dist/react-select.min.css';
 import Menu from '../../components/Menu/Menu';
+
+const agent = pagent(superagent, promise);
 
 class NewInvoice extends Component {
     constructor(props, context) {
@@ -68,7 +72,7 @@ class NewInvoice extends Component {
     handleChangeQuantity(item, e) {
         const copy = Array.from(this.state.invoiceProducts);
         const index = copy.indexOf(item);
-        copy[index].quantity = e.target.value;
+        copy[index].quantity = Number(e.target.value);
         copy[index].total = copy[index].price * Number(e.target.value);
         this.setState({ invoiceProducts: copy }, () => { this.countTotal() });
     }
@@ -81,13 +85,35 @@ class NewInvoice extends Component {
     }
 
     handleDiscountChange(e) {
-        this.setState({ discount: e.target.value }, () => { this.countTotal() });
+        this.setState({ discount: Number(e.target.value) }, () => { this.countTotal() });
     }
 
     countTotal() {
         const amount = this.state.invoiceProducts.reduce((acc, item) => acc + item.total, 0);
         const total = amount - ((amount / 100) * this.state.discount);
         this.setState({ amount, total });
+    }
+
+    handleSubmit(e) {
+        e.preventDefault();
+        const { selectedCustomer, discount, total, invoiceProducts } = this.state;
+
+        agent
+            .post('/api/v1/invoices')
+            .set('Accept', 'application/json')
+            .send({ customer_id: selectedCustomer.id, discount, total })
+            .end()
+            .then(response => {
+                invoiceProducts.forEach(item =>
+                    agent
+                        .post(`/api/v1/invoices/${response.body.id}/items`)
+                        .set('Accept', 'application/json')
+                        .send({ product_id: item.id, ...item })
+                        .end()
+                        .then(() => {
+                            this.props.router.push('/invoices');
+                        }))
+            });
     }
 
     render() {
@@ -105,49 +131,47 @@ class NewInvoice extends Component {
                     <Row>
                         <Col xs={12} lg={5}>
                             <Panel>
-                                <form>
-                                    <FormGroup>
-                                        <ControlLabel>Discount %</ControlLabel>
-                                        <FormControl
-                                            type="text"
-                                            value={this.state.discount}
-                                            onChange={::this.handleDiscountChange}
-                                        />
-                                    </FormGroup>
-                                    <FormGroup>
-                                        <ControlLabel>Customer</ControlLabel>
+                                <FormGroup>
+                                    <ControlLabel>Discount %</ControlLabel>
+                                    <FormControl
+                                        type="text"
+                                        value={this.state.discount}
+                                        onChange={::this.handleDiscountChange}
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <ControlLabel>Customer</ControlLabel>
+                                    <Select
+                                        name="add-invoice-customer"
+                                        valueKey='id'
+                                        labelKey='name'
+                                        options={this.state.customers}
+                                        value={this.state.selectedCustomer}
+                                        onChange={::this.handleCustomerSelect}
+                                    />
+                                </FormGroup>
+                                <FormGroup>
+                                    <ControlLabel>Product</ControlLabel>
+                                    <InputGroup>
                                         <Select
-                                            name="add-invoice-customer"
+                                            name="add-invoice-product"
                                             valueKey='id'
                                             labelKey='name'
-                                            options={this.state.customers}
-                                            value={this.state.selectedCustomer}
-                                            onChange={::this.handleCustomerSelect}
+                                            options={this.state.products}
+                                            value={this.state.selectedProduct}
+                                            onChange={::this.handleProductSelect}
                                         />
-                                    </FormGroup>
-                                    <FormGroup>
-                                        <ControlLabel>Product</ControlLabel>
-                                        <InputGroup>
-                                            <Select
-                                                name="add-invoice-product"
-                                                valueKey='id'
-                                                labelKey='name'
-                                                options={this.state.products}
-                                                value={this.state.selectedProduct}
-                                                onChange={::this.handleProductSelect}
-                                            />
-                                            <InputGroup.Button>
-                                                <Button onClick={::this.handleAddProductToInvoice}>Add</Button>
-                                            </InputGroup.Button>
-                                        </InputGroup>
-                                    </FormGroup>
-                                </form>
+                                        <InputGroup.Button>
+                                            <Button onClick={::this.handleAddProductToInvoice}>Add</Button>
+                                        </InputGroup.Button>
+                                    </InputGroup>
+                                </FormGroup>
                             </Panel>
                             <Panel>
                                 <h4><b>Total: {this.state.total.toFixed(2)}</b></h4>
                                 <h5>Amount: {this.state.amount.toFixed(2)}</h5>
                                 <h5>Discount: {this.state.discount}%</h5>
-                                <Button bsStyle="primary">Create invoice</Button>
+                                <Button bsStyle="primary" onClick={::this.handleSubmit}>Create invoice</Button>
                             </Panel>
                         </Col>
                         <Col xs={12} lg={7}>

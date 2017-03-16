@@ -12,10 +12,7 @@ console.log(`${nodeEnv} mode`);
 const config = {
     devtool: isProd ? '' : 'eval-source-map',
     context: sourcePath,
-    entry: {
-        js: './client.js',
-        vendor: ['react']
-    },
+    entry: ['whatwg-fetch', './client.js'],
     output: {
         path: staticsPath,
         publicPath: '/',
