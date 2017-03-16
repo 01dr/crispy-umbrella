@@ -7,6 +7,8 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import path from 'path';
 
+import universal from './universal';
+
 import * as customersAPI from './api/customers';
 import * as productsAPI from './api/products';
 import * as invoicesAPI from './api/invoices';
@@ -36,6 +38,8 @@ if (isDev) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '..', 'static')));
+// app.set('views', path.join(__dirname, 'view'));
+// app.set('view engine', 'pug');
 
 // REST CUSTOMERS
 app.route('/api/v1/customers')
@@ -69,8 +73,6 @@ app.route('/api/v1/invoices/:invoice_id')
 
 // UNIVERSAL ENDPOINT
 // TODO SSR!
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '..', 'static', 'index.html'));
-});
+app.get('*', universal);
 
 app.listen(port);
