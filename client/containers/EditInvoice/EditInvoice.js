@@ -123,9 +123,28 @@ class EditInvoice extends Component {
 
     handleDeleteProductFromInvoice(item) {
         const copy = Array.from(this.state.invoiceProducts);
-        const index = copy.indexOf(item);
-        copy.splice(index, 1);
-        this.setState({ invoiceProducts: copy }, () => { this.countTotal() });
+        const deletedProduct = copy.filter(t => t.id === item.id)[0];
+        const invoiceProducts = copy.filter(t => t.id !== item.id);
+
+        agent
+            .get(`/api/v1/invoices/${this.props.params.id}`)
+            .set('Accept', 'application/json')
+            .then(invoice => {
+                const invoiceId = JSON.parse(invoice.text).id
+                return agent
+                    .get(`/api/v1/invoices/${invoiceId}/items`)
+                    .set('Accept', 'application/json')
+                    .then(items => {
+                        const itemsObj = JSON.parse(items.text);
+                        const s = itemsObj.filter(t => t.product_id === deletedProduct.id);
+                        return superagent
+                            .delete(`/api/v1/invoices/${this.props.params.id}/items/${s[0].id}`)
+                            .set('Accept', 'application/json')
+                            .end();
+                    });
+            });
+
+        this.setState({ invoiceProducts }, () => { this.countTotal() });
     }
 
     handleDiscountChange(e) {
@@ -143,20 +162,37 @@ class EditInvoice extends Component {
         const { selectedCustomer, discount, total, invoiceProducts } = this.state;
 
         agent
-            .post('/api/v1/invoices')
+            .put(`/api/v1/invoices/${this.props.params.id}`)
             .set('Accept', 'application/json')
             .send({ customer_id: selectedCustomer.id, discount, total })
-            .end()
-            .then(response => {
-                invoiceProducts.forEach(item =>
-                    agent
-                        .post(`/api/v1/invoices/${response.body.id}/items`)
-                        .set('Accept', 'application/json')
-                        .send({ product_id: item.id, ...item })
-                        .end()
-                        .then(() => {
-                            this.props.router.push('/invoices');
-                        }))
+            .then(invoice => {
+                const invoiceId = JSON.parse(invoice.text).id
+                return agent
+                    .get(`/api/v1/invoices/${invoiceId}/items`)
+                    .set('Accept', 'application/json')
+                    .then(items => {
+                        const itemsObj = JSON.parse(items.text);
+                        const newProducts = invoiceProducts.filter(t =>
+                            itemsObj.map(m => m.product_id).indexOf(t.id) < 0);
+                        console.log(newProducts);
+
+                        newProducts.forEach(item =>
+                            agent
+                                .post(`/api/v1/invoices/${this.props.params.id}/items`)
+                                .set('Accept', 'application/json')
+                                .send({ product_id: item.id, ...item })
+                                .end());
+
+                        itemsObj.forEach(item => {
+                            const s = invoiceProducts.filter(t => t.id === item.product_id);
+                            const updatedItem = objectAssign({}, item, ...s);
+                            return agent
+                                .put(`/api/v1/invoices/${this.props.params.id}/items/${item.id}`)
+                                .set('Accept', 'application/json')
+                                .send(updatedItem)
+                                .end()
+                        });
+                    });
             });
     }
 
@@ -215,7 +251,7 @@ class EditInvoice extends Component {
                                 <h4><b>Total: {this.state.total.toFixed(2)}</b></h4>
                                 <h5>Amount: {this.state.amount.toFixed(2)}</h5>
                                 <h5>Discount: {this.state.discount}%</h5>
-                                <Button bsStyle="primary" onClick={::this.handleSubmit}>Create invoice</Button>
+                                <Button bsStyle="primary" onClick={::this.handleSubmit}>Update invoice</Button>
                             </Panel>
                         </Col>
                         <Col xs={12} lg={7}>
