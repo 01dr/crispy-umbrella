@@ -10,7 +10,7 @@ import promise from 'promise';
 import pagent from 'superagent-promise';
 import objectAssign from 'object-assign';
 
-import { Grid, Row, Col, PageHeader, Panel, FormGroup, ControlLabel, FormControl, InputGroup, Button, Table } from 'react-bootstrap';
+import { Grid, Row, Col, PageHeader, Panel, FormGroup, ControlLabel, FormControl, InputGroup, Button, Table, Alert } from 'react-bootstrap';
 import Select from 'react-select';
 import 'react-select/dist/react-select.min.css';
 import Menu from '../../components/Menu/Menu';
@@ -29,7 +29,10 @@ class NewInvoice extends Component {
             invoiceProducts: [],
             amount: 0,
             discount: this.props.discount || 0,
-            total: 0
+            total: 0,
+            customerError: '',
+            invoiceProductsError: '',
+            discountError: ''
         }
     }
 
@@ -60,13 +63,15 @@ class NewInvoice extends Component {
     }
 
     handleAddProductToInvoice() {
-        const acc = Array.from(this.state.invoiceProducts);
-        const copy = objectAssign({}, this.state.selectedProduct, {
-            quantity: 1,
-            total: this.state.selectedProduct.price
-        });
-        acc.push(copy);
-        this.setState({ invoiceProducts: acc }, () => { this.countTotal() });
+        if (this.state.selectedProduct.id) {
+            const acc = Array.from(this.state.invoiceProducts);
+            const copy = objectAssign({}, this.state.selectedProduct, {
+                quantity: 1,
+                total: this.state.selectedProduct.price
+            });
+            acc.push(copy);
+            this.setState({ invoiceProducts: acc }, () => { this.countTotal() });
+        }
     }
 
     handleChangeQuantity(item, e) {
@@ -98,25 +103,47 @@ class NewInvoice extends Component {
         e.preventDefault();
         const { selectedCustomer, discount, total, invoiceProducts } = this.state;
 
-        agent
-            .post('/api/v1/invoices')
-            .set('Accept', 'application/json')
-            .send({ customer_id: selectedCustomer.id, discount, total })
-            .end()
-            .then(response => {
-                invoiceProducts.forEach(item =>
-                    agent
-                        .post(`/api/v1/invoices/${response.body.id}/items`)
-                        .set('Accept', 'application/json')
-                        .send({ product_id: item.id, ...item })
-                        .end()
-                        .then(() => {
-                            this.props.router.push('/invoices');
-                        }))
-            });
+        let errors = false;
+        this.setState({ customerError: '', invoiceProductsError: '' });
+
+        if (selectedCustomer.id == null) {
+            errors = true;
+            this.setState({ customerError: 'Customer required' });
+        }
+
+        if (invoiceProducts.length < 1) {
+            errors = true;
+            this.setState({ invoiceProductsError: 'Products required' });
+        }
+
+        if (Number(discount) > 100) {
+            errors = true;
+            this.setState({ discountError: 'Discount must be from 0 to 100%' });
+        }
+
+        if (!errors) {
+            agent
+                .post('/api/v1/invoices')
+                .set('Accept', 'application/json')
+                .send({ customer_id: selectedCustomer.id, discount, total })
+                .end()
+                .then(response => {
+                    invoiceProducts.forEach(item =>
+                        agent
+                            .post(`/api/v1/invoices/${response.body.id}/items`)
+                            .set('Accept', 'application/json')
+                            .send({ product_id: item.id, ...item })
+                            .end()
+                            .then(() => {
+                                this.props.router.push('/invoices');
+                            }))
+                });
+        }
     }
 
     render() {
+        const { customerError, invoiceProductsError, discountError } = this.state;
+
         return (
             <div>
                 <Menu/>
@@ -129,28 +156,32 @@ class NewInvoice extends Component {
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={12} lg={5}>
-                            <Panel>
-                                <FormGroup>
-                                    <ControlLabel>Discount %</ControlLabel>
+                        <Col xs={12} lg={4}>
+                            <FormGroup>
+                                <ControlLabel>Discount %</ControlLabel>
+                                <InputGroup>
                                     <FormControl
-                                        type="text"
+                                        type='number'
+                                        min='0'
+                                        max='100'
                                         value={this.state.discount}
                                         onChange={::this.handleDiscountChange}
                                     />
-                                </FormGroup>
-                                <FormGroup>
-                                    <ControlLabel>Customer</ControlLabel>
-                                    <Select
-                                        name="add-invoice-customer"
-                                        valueKey='id'
-                                        labelKey='name'
-                                        options={this.state.customers}
-                                        value={this.state.selectedCustomer}
-                                        onChange={::this.handleCustomerSelect}
-                                    />
-                                </FormGroup>
-                                <FormGroup>
+                                    <InputGroup.Addon>%</InputGroup.Addon>
+                                </InputGroup>
+                            </FormGroup>
+                            <FormGroup>
+                                <ControlLabel>Customer</ControlLabel>
+                                <Select
+                                    name='add-invoice-customer'
+                                    valueKey='id'
+                                    labelKey='name'
+                                    options={this.state.customers}
+                                    value={this.state.selectedCustomer}
+                                    onChange={::this.handleCustomerSelect}
+                                />
+                            </FormGroup>
+                            <FormGroup>
                                     <ControlLabel>Product</ControlLabel>
                                     <InputGroup>
                                         <Select
@@ -166,49 +197,56 @@ class NewInvoice extends Component {
                                         </InputGroup.Button>
                                     </InputGroup>
                                 </FormGroup>
-                            </Panel>
-                            <Panel>
+
+                            {customerError && <Alert bsStyle='danger'>{customerError}</Alert>}
+                            {invoiceProductsError && <Alert bsStyle='danger'>{invoiceProductsError}</Alert>}
+                            {discountError && <Alert bsStyle='danger'>{discountError}</Alert>}
+
+                            <div>
                                 <h4><b>Total: {this.state.total.toFixed(2)}</b></h4>
                                 <h5>Amount: {this.state.amount.toFixed(2)}</h5>
                                 <h5>Discount: {this.state.discount}%</h5>
                                 <Button bsStyle="primary" onClick={::this.handleSubmit}>Create invoice</Button>
-                            </Panel>
+                            </div>
                         </Col>
-                        <Col xs={12} lg={7}>
+                        <Col xs={12} lg={8}>
                             <Panel>
-                                <Table responsive>
+                                <Table responsive hover>
                                     <thead>
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Price</th>
-                                            <th>Total</th>
-                                            <th>Quantity</th>
-                                            <td/>
-                                        </tr>
+                                    <tr>
+                                        <th className='col-xs-3'>Name</th>
+                                        <th className='col-xs-2'>Price</th>
+                                        <th className='col-xs-2'>Total</th>
+                                        <th className='col-xs-3'>Quantity</th>
+                                        <td className='col-xs-2'/>
+                                    </tr>
                                     </thead>
 
                                     <tbody>
-                                        {this.state.invoiceProducts.map(item =>
-                                            (
-                                                <tr key={`ip${item.id}`}>
-                                                    <td>{item.name}</td>
-                                                    <td>{item.price}</td>
-                                                    <td>{item.total}</td>
-                                                    <td>
-                                                        <FormControl
-                                                            placeholder="qty"
-                                                            value={item.quantity}
-                                                            onChange={this.handleChangeQuantity.bind(this, item)}
-                                                        />
-                                                    </td>
-                                                    <td>
-                                                        <Button
-                                                            bsStyle='danger'
-                                                            onClick={this.handleDeleteProductFromInvoice.bind(this, item)}
-                                                        >Delete</Button>
-                                                    </td>
-                                                </tr>
-                                            ))}
+                                    {this.state.invoiceProducts.map(item =>
+                                        (
+                                            <tr key={`ip${item.id}`}>
+                                                <td className='col-xs-3'>{item.name}</td>
+                                                <td className='col-xs-2'>{Number(item.price).toFixed(2)}</td>
+                                                <td className='col-xs-2'>{Number(item.total).toFixed(2)}</td>
+                                                <td className='col-xs-3'>
+                                                    <FormControl
+                                                        type='number'
+                                                        min='1'
+                                                        max='100'
+                                                        placeholder='qty'
+                                                        value={item.quantity}
+                                                        onChange={this.handleChangeQuantity.bind(this, item)}
+                                                    />
+                                                </td>
+                                                <td className='col-xs-2 text-right'>
+                                                    <Button
+                                                        bsStyle='danger'
+                                                        onClick={this.handleDeleteProductFromInvoice.bind(this, item)}
+                                                    >Delete</Button>
+                                                </td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </Table>
                             </Panel>
