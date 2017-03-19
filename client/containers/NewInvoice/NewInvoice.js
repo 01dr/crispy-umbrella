@@ -104,7 +104,7 @@ class NewInvoice extends Component {
         const { selectedCustomer, discount, total, invoiceProducts } = this.state;
 
         let errors = false;
-        this.setState({ customerError: '', invoiceProductsError: '' });
+        this.setState({ customerError: '', invoiceProductsError: '', discountError: '' });
 
         if (selectedCustomer.id == null) {
             errors = true;
