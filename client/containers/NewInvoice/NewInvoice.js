@@ -130,14 +130,12 @@ export default class NewInvoice extends Component {
                 .post('/api/v1/invoices')
                 .set('Accept', 'application/json')
                 .send({ customer_id: selectedCustomer.id, discount, total })
-                .end()
                 .then(response => {
                     invoiceProducts.forEach(item =>
                         agent
                             .post(`/api/v1/invoices/${response.body.id}/items`)
                             .set('Accept', 'application/json')
                             .send({ product_id: item.id, ...item })
-                            .end()
                             .then(() => {
                                 this.props.router.push('/invoices');
                             }))

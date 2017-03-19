@@ -226,7 +226,7 @@ export default class EditInvoice extends Component {
                                     .put(`/api/v1/invoices/${this.props.params.id}/items/${item.id}`)
                                     .set('Accept', 'application/json')
                                     .send(updatedItem)
-                                    .end()
+                                    .then(() => { this.props.router.push('/invoices') });
                             });
                         });
                 });
