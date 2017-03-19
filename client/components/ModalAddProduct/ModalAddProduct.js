@@ -19,54 +19,43 @@ export default class ModalAddProduct extends Component {
             name: this.props.name || '',
             price: this.props.price || '',
             nameError: '',
-            priceError: '',
-            formValidate: false
+            priceError: ''
         }
     }
 
     handleFieldChange(field, e) {
         const value = e.target.value;
-        this.setState({ [field]: value }, () => this.handleFieldValidate(field, value));
-    }
-
-    handleFieldValidate(field, value) {
-        console.log(field, value);
-        switch (field) {
-        case 'name':
-            if (value.trim().length < 5) {
-                this.setState({ nameError: 'Name should be more than 5 symbols' });
-                break;
-            }
-
-            this.setState({ nameError: '' });
-            break;
-        case 'price':
-            if (!value.match(/^\d+(.\d{1,2})?$/)) {
-                this.setState({ priceError: 'Price should be a number' });
-                break;
-            }
-
-            if (value === '') {
-                this.setState({ priceError: 'Price is empty' });
-                break;
-            }
-
-            this.setState({ priceError: '' });
-            break;
-
-        default:
-            break;
-        }
+        this.setState({ [field]: value });
     }
 
     handleSubmit(e) {
         const { dispatch } = this.props;
-        const { name, price, nameError, priceError } = this.state;
+        const { name, price } = this.state;
         e.preventDefault();
 
-        if (nameError + priceError === '') {
+        let errors = false;
+        this.setState({ nameError: '', priceError: '' });
+
+        if (name.length < 5) {
+            errors = true;
+            this.setState({ nameError: 'Name should be more than 5 symbols' });
+        }
+
+        if (!price.match(/^\d+(.\d{1,2})?$/)) {
+            errors = true;
+            this.setState({ priceError: 'Price should be a number' });
+        }
+
+        if (price === '') {
+            errors = true;
+            this.setState({ priceError: 'Price is empty' });
+        }
+
+        // submit
+        if (!errors) {
             dispatch(addProduct({ name, price }));
             dispatch(closeModalAddProduct());
+            this.setState({ name: '', price: '' });
         }
     }
 
@@ -76,12 +65,12 @@ export default class ModalAddProduct extends Component {
 
         return (
             <Modal show={open}>
-                <ModalHeader>
-                    <ModalTitle>Add product</ModalTitle>
-                </ModalHeader>
+                <form onSubmit={::this.handleSubmit}>
+                    <ModalHeader>
+                        <ModalTitle>Add product</ModalTitle>
+                    </ModalHeader>
 
-                <ModalBody>
-                    <form>
+                    <ModalBody>
                         <FormGroup>
                             <ControlLabel>Name</ControlLabel>
                             <FormControl
@@ -102,16 +91,16 @@ export default class ModalAddProduct extends Component {
                                 onChange={this.handleFieldChange.bind(this, 'price')}
                             />
                         </FormGroup>
-                    </form>
 
-                    {nameError && <Alert bsStyle='danger'>{nameError}</Alert>}
-                    {priceError && <Alert bsStyle='danger'>{priceError}</Alert>}
-                </ModalBody>
+                        {nameError && <Alert bsStyle='danger'>{nameError}</Alert>}
+                        {priceError && <Alert bsStyle='danger'>{priceError}</Alert>}
+                    </ModalBody>
 
-                <ModalFooter>
-                    <Button onClick={::this.handleSubmit} bsStyle='primary'>Add</Button>
-                    <Button onClick={ () => dispatch(closeModalAddProduct()) }>Close</Button>
-                </ModalFooter>
+                    <ModalFooter>
+                        <Button type='submit' onClick={::this.handleSubmit} bsStyle='primary'>Add</Button>
+                        <Button onClick={ () => dispatch(closeModalAddProduct()) }>Close</Button>
+                    </ModalFooter>
+                </form>
             </Modal>
         )
     }
