@@ -6,7 +6,7 @@
 import React, { Component } from 'react';
 import {
     Modal, ModalBody, ModalHeader, ModalFooter, ModalTitle,
-    Button, FormGroup, ControlLabel, FormControl
+    Button, FormGroup, ControlLabel, FormControl, Alert
 } from 'react-bootstrap';
 
 import { closeModalEditCustomer, updateCustomer } from '../../actions/customersActions';
@@ -19,7 +19,11 @@ export default class ModalEditCustomer extends Component {
             id: '',
             name: '',
             address: '',
-            phone: ''
+            phone: '',
+            idError: '',
+            nameError: '',
+            addressError: '',
+            phoneError: ''
         }
     }
 
@@ -30,72 +34,99 @@ export default class ModalEditCustomer extends Component {
         }
     }
 
-    handleNameChange(e) {
-        this.setState({ name: e.target.value });
-    }
-
-    handleAddressChange(e) {
-        this.setState({ address: e.target.value });
-    }
-
-    handlePhoneChange(e) {
-        this.setState({ phone: e.target.value });
+    handleFieldChange(field, e) {
+        const value = e.target.value;
+        this.setState({ [field]: value });
     }
 
     handleSubmit(e) {
         const { dispatch } = this.props;
         const { id, name, address, phone } = this.state;
         e.preventDefault();
-        dispatch(updateCustomer({ id, name, address, phone }));
-        dispatch(closeModalEditCustomer());
+
+        let errors = false;
+        this.setState({ nameError: '', addressError: '', phoneError: '', idError: '' });
+
+        if (name.length < 5) {
+            errors = true;
+            this.setState({ nameError: 'Name should be more than 5 symbols' });
+        }
+
+        if (address === '') {
+            errors = true;
+            this.setState({ addressError: 'Address is empty' });
+        }
+
+        if (phone === '') {
+            errors = true;
+            this.setState({ phoneError: 'Phone is empty' });
+        }
+
+        if (id == null) {
+            errors = true;
+            this.setState({ idError: 'Something went wrong' });
+        }
+
+        if (!errors) {
+            dispatch(updateCustomer({ id, name, address, phone }));
+            dispatch(closeModalEditCustomer());
+        }
     }
 
     render() {
         const { dispatch, open } = this.props;
-        const { name, address, phone } = this.state;
+        const { name, address, phone, nameError, addressError, phoneError, idError } = this.state;
 
         return (
             <Modal show={open}>
-                <ModalHeader>
-                    <ModalTitle>Edit customer</ModalTitle>
-                </ModalHeader>
+                <form onSubmit={::this.handleSubmit}>
+                    <ModalHeader>
+                        <ModalTitle>Edit customer</ModalTitle>
+                    </ModalHeader>
 
-                <ModalBody>
-                    <form>
+                    <ModalBody>
                         <FormGroup>
                             <ControlLabel>Name</ControlLabel>
                             <FormControl
                                 type='text'
+                                name='name'
                                 value={name}
                                 placeholder='John Doe'
-                                onChange={::this.handleNameChange}
+                                onChange={this.handleFieldChange.bind(this, 'name')}
                             />
                         </FormGroup>
                         <FormGroup>
                             <ControlLabel>Address</ControlLabel>
                             <FormControl
                                 type='text'
+                                name='address'
                                 value={address}
                                 placeholder='788, 21 st, New York, NY, USA'
-                                onChange={::this.handleAddressChange}
+                                onChange={this.handleFieldChange.bind(this, 'address')}
                             />
                         </FormGroup>
                         <FormGroup>
                             <ControlLabel>Phone</ControlLabel>
                             <FormControl
                                 type='text'
+                                name='phone'
                                 value={phone}
                                 placeholder='+19834729834'
-                                onChange={::this.handlePhoneChange}
+                                onChange={this.handleFieldChange.bind(this, 'phone')}
                             />
                         </FormGroup>
-                    </form>
-                </ModalBody>
 
-                <ModalFooter>
-                    <Button onClick={::this.handleSubmit} bsStyle='primary'>Update</Button>
-                    <Button onClick={ () => dispatch(closeModalEditCustomer()) }>Cancel</Button>
-                </ModalFooter>
+                        {nameError && <Alert bsStyle='danger'>{nameError}</Alert>}
+                        {addressError && <Alert bsStyle='danger'>{addressError}</Alert>}
+                        {phoneError && <Alert bsStyle='danger'>{phoneError}</Alert>}
+                        {idError && <Alert bsStyle='danger'>{idError}</Alert>}
+                    </ModalBody>
+
+                    <ModalFooter>
+                        <Button type='submit' onClick={::this.handleSubmit} bsStyle='primary'>Update</Button>
+                        <Button onClick={ () => dispatch(closeModalEditCustomer()) }>Cancel</Button>
+                    </ModalFooter>
+                </form>
             </Modal>
         )
     }
