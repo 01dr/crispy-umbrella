@@ -4,6 +4,7 @@
  */
 
 import React, { Component } from 'react';
+import Helmet from 'react-helmet';
 import { connect } from 'react-redux';
 
 import { Grid, Row, Col, PageHeader, Button } from 'react-bootstrap';
@@ -34,6 +35,7 @@ class Products extends Component {
 
         return (
             <div>
+                <Helmet title='Products | Invoice App'/>
                 <Menu/>
                 <Grid>
                     <Row>

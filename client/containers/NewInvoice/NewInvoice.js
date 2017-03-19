@@ -4,7 +4,7 @@
  */
 
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import Helmet from 'react-helmet';
 import superagent from 'superagent';
 import promise from 'promise';
 import pagent from 'superagent-promise';
@@ -17,7 +17,7 @@ import Menu from '../../components/Menu/Menu';
 
 const agent = pagent(superagent, promise);
 
-class NewInvoice extends Component {
+export default class NewInvoice extends Component {
     constructor(props, context) {
         super(props, context);
 
@@ -146,6 +146,7 @@ class NewInvoice extends Component {
 
         return (
             <div>
+                <Helmet title='New invoice | Invoice App'/>
                 <Menu/>
                 <Grid>
                     <Row>
@@ -257,5 +258,3 @@ class NewInvoice extends Component {
         )
     }
 }
-
-export default connect(() => ({}))(NewInvoice);
