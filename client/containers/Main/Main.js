@@ -6,8 +6,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import { Grid, Row, Col, PageHeader, Button, Jumbotron } from 'react-bootstrap';
+import { Grid, Row, Col, Jumbotron } from 'react-bootstrap';
 import Menu from '../../components/Menu/Menu';
+
+import '../assets/bootstrap/css/bootstrap.min.css';
 
 class Main extends Component {
     render() {

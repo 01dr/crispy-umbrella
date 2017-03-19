@@ -7,6 +7,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import { Grid, Row, Col, PageHeader, Button } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 import Menu from '../../components/Menu/Menu';
 import InvoicesTable from '../../components/InvoicesTable/InvoicesTable';
 import ModalDeleteInvoice from '../../components/ModalDeleteInvoice/ModalDeleteInvoice';
@@ -34,7 +35,7 @@ class Invoices extends Component {
                     <Row>
                         <Col xs={12}>
                             <PageHeader>
-                                Invoices list <Button>Create</Button>
+                                Invoices list <LinkContainer to='/invoices/add'><Button>Create</Button></LinkContainer>
                             </PageHeader>
                         </Col>
                     </Row>

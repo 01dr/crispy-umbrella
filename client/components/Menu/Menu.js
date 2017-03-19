@@ -20,7 +20,6 @@ const Menu = () => (
             <LinkContainer to="/invoices"><NavItem>Invoices</NavItem></LinkContainer>
             <LinkContainer to="/products"><NavItem>Products</NavItem></LinkContainer>
             <LinkContainer to="/customers"><NavItem>Customers</NavItem></LinkContainer>
-            <LinkContainer to="/invoices/add"><NavItem>add invoice</NavItem></LinkContainer>
         </Nav>
     </Navbar>
 );

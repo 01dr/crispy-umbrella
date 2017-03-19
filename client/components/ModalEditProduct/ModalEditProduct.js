@@ -50,7 +50,7 @@ export default class ModalEditProduct extends Component {
             this.setState({ nameError: 'Name should be more than 5 symbols' });
         }
 
-        if (!price.match(/^\d+(.\d{1,2})?$/)) {
+        if (!/^\d+(.\d{1,2})?$/.test(String(price))) {
             errors = true;
             this.setState({ priceError: 'Price should be a number' });
         }

@@ -9,7 +9,7 @@ import { Table, Button, ButtonGroup } from 'react-bootstrap';
 import { openModalDeleteProduct, openModalEditProduct } from '../../actions/productsActions';
 
 const ProductsTable = props => (
-    <Table responsive>
+    <Table responsive hover>
         <thead>
             <tr>
                 <th>#</th>
@@ -22,19 +22,18 @@ const ProductsTable = props => (
         <tbody>
             {props.productsList.map(item => (
                 <tr key={item.id}>
-                    <td>{item.id}</td>
-                    <td>{item.name}</td>
-                    <td>{item.price}</td>
-                    <td>
+                    <td className='col-xs-1'>{item.id}</td>
+                    <td className='col-xs-3'>{item.name}</td>
+                    <td className='col-xs-3'>{item.price}</td>
+                    <td className='col-xs-5 text-right'>
                         <ButtonGroup>
                             <Button
-                                bsStyle="info"
-                                bsSize="xsmall"
+                                bsSize='xsmall'
                                 onClick={() => props.dispatch(openModalEditProduct(item))}
                             >Edit</Button>
                             <Button
-                                bsStyle="danger"
-                                bsSize="xsmall"
+                                bsStyle='danger'
+                                bsSize='xsmall'
                                 onClick={() => props.dispatch(openModalDeleteProduct(item))}
                             >Delete</Button>
                         </ButtonGroup>

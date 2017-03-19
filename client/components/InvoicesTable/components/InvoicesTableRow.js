@@ -5,6 +5,7 @@
 
 import React, { Component } from 'react';
 import { Button, ButtonGroup } from 'react-bootstrap';
+import { LinkContainer } from 'react-router-bootstrap';
 import superagent from 'superagent';
 
 import { openModalDeleteInvoice } from '../../../actions/invoicesActions';
@@ -36,19 +37,18 @@ export default class InvoicesTableRow extends Component {
 
         return (
             <tr>
-                <td>{id}</td>
-                <td>{customer.name}</td>
-                <td>{discount}</td>
-                <td>{total}</td>
-                <td>
+                <td className='col-xs-1'>{id}</td>
+                <td className='col-xs-3'>{customer.name}</td>
+                <td className='col-xs-2'>{discount}</td>
+                <td className='col-xs-2'>{Number(total).toFixed(2)}</td>
+                <td className='col-xs-4 text-right'>
                     <ButtonGroup>
+                        <LinkContainer to={`/invoices/${id}/edit`}>
+                            <Button bsSize='xsmall'>Edit</Button>
+                        </LinkContainer>
                         <Button
-                            bsStyle="info"
-                            bsSize="xsmall"
-                        >Edit</Button>
-                        <Button
-                            bsStyle="danger"
-                            bsSize="xsmall"
+                            bsStyle='danger'
+                            bsSize='xsmall'
                             onClick={() => dispatch(openModalDeleteInvoice(item))}
                         >Delete</Button>
                     </ButtonGroup>

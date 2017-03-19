@@ -9,7 +9,7 @@ import { Table, Button, ButtonGroup } from 'react-bootstrap';
 import { openModalDeleteCustomer, openModalEditCustomer } from '../../actions/customersActions';
 
 const CustomersTable = props => (
-    <Table responsive>
+    <Table responsive hover>
         <thead>
             <tr>
                 <th>#</th>
@@ -23,20 +23,19 @@ const CustomersTable = props => (
         <tbody>
             {props.customersList.map(item => (
                 <tr key={item.id}>
-                    <td>{item.id}</td>
-                    <td>{item.name}</td>
-                    <td>{item.address}</td>
-                    <td>{item.phone}</td>
-                    <td>
+                    <td className='col-xs-1'>{item.id}</td>
+                    <td className='col-xs-3'>{item.name}</td>
+                    <td className='col-xs-4'>{item.address}</td>
+                    <td className='col-xs-2'>{item.phone}</td>
+                    <td className='col-xs-2 text-right'>
                         <ButtonGroup>
                             <Button
-                                bsStyle="info"
-                                bsSize="xsmall"
+                                bsSize='xsmall'
                                 onClick={() => props.dispatch(openModalEditCustomer(item))}
                             >Edit</Button>
                             <Button
-                                bsStyle="danger"
-                                bsSize="xsmall"
+                                bsSize='xsmall'
+                                bsStyle='danger'
                                 onClick={() => props.dispatch(openModalDeleteCustomer(item))}
                             >Delete</Button>
                         </ButtonGroup>

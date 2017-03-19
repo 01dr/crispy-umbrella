@@ -8,7 +8,7 @@ import { Table } from 'react-bootstrap';
 import InvoicesTableRow from './components/InvoicesTableRow';
 
 const InvoicesTable = props => (
-    <Table responsive>
+    <Table responsive hover>
         <thead>
             <tr>
                 <th>#</th>
