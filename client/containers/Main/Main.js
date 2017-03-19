@@ -21,7 +21,6 @@ class Main extends Component {
                 <Helmet title='Main | Invoice App'/>
                 <Menu/>
                 <EZT
-                    path={location.pathname}
                     initialStyle={{ opacity: 0 }}
                     transition="opacity 0.3s ease-in"
                     finalStyle={{ opacity: 1 }}

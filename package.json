@@ -7,7 +7,6 @@
 	"license": "MIT",
 	"scripts": {
 		"start": "NODE_ENV=development node server/server.babel.js",
-		"start-webpack": "NODE_ENV=development webpack-dev-server",
 		"build": "NODE_ENV=production webpack -p"
 	},
 	"dependencies": {
@@ -31,6 +30,7 @@
 		"express": "^4.15.2",
 		"extract-text-webpack-plugin": "^v2.0.0-rc.3",
 		"file-loader": "^0.10.0",
+		"history": "^4.6.1",
 		"image-webpack-loader": "^3.2.0",
 		"lodash": "^4.17.4",
 		"normalize.css": "^5.0.0",

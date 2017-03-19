@@ -39,8 +39,6 @@ if (isDev) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(express.static(path.join(__dirname, '..', 'static')));
-// app.set('views', path.join(__dirname, 'view'));
-// app.set('view engine', 'pug');
 
 // REST CUSTOMERS
 app.route('/api/v1/customers')

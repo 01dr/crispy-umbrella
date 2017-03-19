@@ -39,7 +39,6 @@ class Customers extends Component {
                 <Helmet title='Customers | Invoice App'/>
                 <Menu/>
                 <EZT
-                    path={location.pathname}
                     initialStyle={{ opacity: 0 }}
                     transition="opacity 0.3s ease-in"
                     finalStyle={{ opacity: 1 }}

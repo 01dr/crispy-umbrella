@@ -20,9 +20,8 @@ export default class InvoicesTableRow extends Component {
     }
 
     componentDidMount() {
-        const { customer_id } = this.props.item;
         superagent
-            .get(`/api/v1/customers/${customer_id}`)
+            .get(`/api/v1/customers/${this.props.item.customer_id}`)
             .set('Accept', 'application/json')
             .end((error, result) =>
                 (error
@@ -38,7 +37,7 @@ export default class InvoicesTableRow extends Component {
         return (
             <tr>
                 <td className='col-xs-1'>{id}</td>
-                <td className='col-xs-3'>{customer.name}</td>
+                <td className='col-xs-3'>{customer ? customer.name : 'DELETED CUSTOMER'}</td>
                 <td className='col-xs-2'>{discount}</td>
                 <td className='col-xs-2'>{Number(total).toFixed(2)}</td>
                 <td className='col-xs-4 text-right'>

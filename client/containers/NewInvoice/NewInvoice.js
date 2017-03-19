@@ -151,7 +151,6 @@ export default class NewInvoice extends Component {
                 <Helmet title='New invoice | Invoice App'/>
                 <Menu/>
                 <EZT
-                    path={location.pathname}
                     initialStyle={{ opacity: 0 }}
                     transition="opacity 0.3s ease-in"
                     finalStyle={{ opacity: 1 }}

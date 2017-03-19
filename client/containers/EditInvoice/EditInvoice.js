@@ -58,7 +58,6 @@ export default class EditInvoice extends Component {
         agent
             .get(`/api/v1/invoices/${this.props.params.id}`)
             .set('Accept', 'application/json')
-            .end()
             .then(response => {
                 const result = JSON.parse(response.text);
                 const { discount } = result;
@@ -67,7 +66,6 @@ export default class EditInvoice extends Component {
                 return agent
                     .get(`/api/v1/customers/${result.customer_id}`)
                     .set('Accept', 'application/json')
-                    .end()
                     .then(customer => {
                         this.setState({ selectedCustomer: JSON.parse(customer.text) });
                     });
@@ -241,7 +239,6 @@ export default class EditInvoice extends Component {
                 <Helmet title='Edit invoice | Invoice App'/>
                 <Menu/>
                 <EZT
-                    path={location.pathname}
                     initialStyle={{ opacity: 0 }}
                     transition="opacity 0.3s ease-in"
                     finalStyle={{ opacity: 1 }}
