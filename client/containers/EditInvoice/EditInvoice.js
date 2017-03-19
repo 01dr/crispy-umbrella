@@ -25,8 +25,8 @@ export default class EditInvoice extends Component {
         this.state = {
             customers: [],
             products: [],
-            selectedCustomer: {},
-            selectedProduct: {},
+            selectedCustomer: undefined,
+            selectedProduct: undefined,
             invoiceProducts: [],
             amount: 0,
             discount: this.props.discount || 0,
