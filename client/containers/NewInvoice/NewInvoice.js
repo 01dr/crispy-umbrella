@@ -64,7 +64,10 @@ export default class NewInvoice extends Component {
     }
 
     handleAddProductToInvoice() {
-        if (this.state.selectedProduct.id) {
+        const productId = this.state.selectedProduct.id;
+        const invProducts = this.state.invoiceProducts.map(m => m.id);
+
+        if (invProducts.indexOf(productId) < 0) {
             const acc = Array.from(this.state.invoiceProducts);
             const copy = objectAssign({}, this.state.selectedProduct, {
                 quantity: 1,

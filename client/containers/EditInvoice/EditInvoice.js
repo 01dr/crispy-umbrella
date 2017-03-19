@@ -109,16 +109,17 @@ export default class EditInvoice extends Component {
     }
 
     handleAddProductToInvoice() {
-        if (this.state.selectedProduct.id) {
+        const productId = this.state.selectedProduct.id;
+        const invProducts = this.state.invoiceProducts.map(m => m.id);
+
+        if (invProducts.indexOf(productId) < 0) {
             const acc = Array.from(this.state.invoiceProducts);
             const copy = objectAssign({}, this.state.selectedProduct, {
                 quantity: 1,
                 total: this.state.selectedProduct.price
             });
             acc.push(copy);
-            this.setState({invoiceProducts: acc}, () => {
-                this.countTotal()
-            });
+            this.setState({ invoiceProducts: acc }, () => { this.countTotal() });
         }
     }
 
