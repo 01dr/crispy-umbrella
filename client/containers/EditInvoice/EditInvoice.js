@@ -5,6 +5,7 @@
 
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
+import EZT from 'react-easy-transition';
 import superagent from 'superagent';
 import promise from 'promise';
 import pagent from 'superagent-promise';
@@ -209,7 +210,6 @@ export default class EditInvoice extends Component {
                             const itemsObj = JSON.parse(items.text);
                             const newProducts = invoiceProducts.filter(t =>
                             itemsObj.map(m => m.product_id).indexOf(t.id) < 0);
-                            console.log(newProducts);
 
                             newProducts.forEach(item =>
                                 agent
@@ -239,114 +239,121 @@ export default class EditInvoice extends Component {
             <div>
                 <Helmet title='Edit invoice | Invoice App'/>
                 <Menu/>
-                <Grid>
-                    <Row>
-                        <Col xs={12}>
-                            <PageHeader>
-                                Edit invoice id#{this.props.params.id}
-                            </PageHeader>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xs={12} lg={4}>
-                            <FormGroup>
-                                <ControlLabel>Discount %</ControlLabel>
-                                <InputGroup>
-                                    <FormControl
-                                        type='number'
-                                        min='0'
-                                        max='100'
-                                        value={this.state.discount}
-                                        onChange={::this.handleDiscountChange}
-                                    />
-                                    <InputGroup.Addon>%</InputGroup.Addon>
-                                </InputGroup>
-                            </FormGroup>
-                            <FormGroup>
-                                <ControlLabel>Customer</ControlLabel>
-                                <Select
-                                    name='add-invoice-customer'
-                                    valueKey='id'
-                                    labelKey='name'
-                                    options={this.state.customers}
-                                    value={this.state.selectedCustomer}
-                                    onChange={::this.handleCustomerSelect}
-                                />
-                            </FormGroup>
-                            <FormGroup>
-                                <ControlLabel>Product</ControlLabel>
-                                <InputGroup>
+                <EZT
+                    path={location.pathname}
+                    initialStyle={{ opacity: 0 }}
+                    transition="opacity 0.3s ease-in"
+                    finalStyle={{ opacity: 1 }}
+                >
+                    <Grid>
+                        <Row>
+                            <Col xs={12}>
+                                <PageHeader>
+                                    Edit invoice id#{this.props.params.id}
+                                </PageHeader>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xs={12} lg={4}>
+                                <FormGroup>
+                                    <ControlLabel>Discount %</ControlLabel>
+                                    <InputGroup>
+                                        <FormControl
+                                            type='number'
+                                            min='0'
+                                            max='100'
+                                            value={this.state.discount}
+                                            onChange={::this.handleDiscountChange}
+                                        />
+                                        <InputGroup.Addon>%</InputGroup.Addon>
+                                    </InputGroup>
+                                </FormGroup>
+                                <FormGroup>
+                                    <ControlLabel>Customer</ControlLabel>
                                     <Select
-                                        name='add-invoice-product'
+                                        name='add-invoice-customer'
                                         valueKey='id'
                                         labelKey='name'
-                                        options={this.state.products}
-                                        value={this.state.selectedProduct}
-                                        onChange={::this.handleProductSelect}
+                                        options={this.state.customers}
+                                        value={this.state.selectedCustomer}
+                                        onChange={::this.handleCustomerSelect}
                                     />
-                                    <InputGroup.Button>
-                                        <Button onClick={::this.handleAddProductToInvoice}>Add</Button>
-                                    </InputGroup.Button>
-                                </InputGroup>
-                            </FormGroup>
+                                </FormGroup>
+                                <FormGroup>
+                                    <ControlLabel>Product</ControlLabel>
+                                    <InputGroup>
+                                        <Select
+                                            name='add-invoice-product'
+                                            valueKey='id'
+                                            labelKey='name'
+                                            options={this.state.products}
+                                            value={this.state.selectedProduct}
+                                            onChange={::this.handleProductSelect}
+                                        />
+                                        <InputGroup.Button>
+                                            <Button onClick={::this.handleAddProductToInvoice}>Add</Button>
+                                        </InputGroup.Button>
+                                    </InputGroup>
+                                </FormGroup>
 
-                            {customerError && <Alert bsStyle='danger'>{customerError}</Alert>}
-                            {invoiceProductsError && <Alert bsStyle='danger'>{invoiceProductsError}</Alert>}
-                            {discountError && <Alert bsStyle='danger'>{discountError}</Alert>}
-                            {quantityError && <Alert bsStyle='danger'>{quantityError}</Alert>}
+                                {customerError && <Alert bsStyle='danger'>{customerError}</Alert>}
+                                {invoiceProductsError && <Alert bsStyle='danger'>{invoiceProductsError}</Alert>}
+                                {discountError && <Alert bsStyle='danger'>{discountError}</Alert>}
+                                {quantityError && <Alert bsStyle='danger'>{quantityError}</Alert>}
 
-                            <div>
-                                <h4><b>Total: {this.state.total.toFixed(2)}</b></h4>
-                                <h5>Amount: {this.state.amount.toFixed(2)}</h5>
-                                <h5>Discount: {this.state.discount}%</h5>
-                                <Button bsStyle="primary" onClick={::this.handleSubmit}>Update invoice</Button>
-                            </div>
-                        </Col>
-                        <Col xs={12} lg={8}>
-                            <Panel>
-                                <Table responsive hover>
-                                    <thead>
-                                    <tr>
-                                        <th className='col-xs-3'>Name</th>
-                                        <th className='col-xs-2'>Price</th>
-                                        <th className='col-xs-2'>Total</th>
-                                        <th className='col-xs-3'>Quantity</th>
-                                        <td className='col-xs-2'/>
-                                    </tr>
-                                    </thead>
+                                <div>
+                                    <h4><b>Total: {this.state.total.toFixed(2)}</b></h4>
+                                    <h5>Amount: {this.state.amount.toFixed(2)}</h5>
+                                    <h5>Discount: {this.state.discount}%</h5>
+                                    <Button bsStyle="primary" onClick={::this.handleSubmit}>Update invoice</Button>
+                                </div>
+                            </Col>
+                            <Col xs={12} lg={8}>
+                                <Panel>
+                                    <Table responsive hover>
+                                        <thead>
+                                        <tr>
+                                            <th className='col-xs-3'>Name</th>
+                                            <th className='col-xs-2'>Price</th>
+                                            <th className='col-xs-2'>Total</th>
+                                            <th className='col-xs-3'>Quantity</th>
+                                            <td className='col-xs-2'/>
+                                        </tr>
+                                        </thead>
 
-                                    <tbody>
-                                    {this.state.invoiceProducts.map(item =>
-                                        (
-                                            <tr key={`ip${item.id}`}>
-                                                <td className='col-xs-3'>{item.name}</td>
-                                                <td className='col-xs-2'>{Number(item.price).toFixed(2)}</td>
-                                                <td className='col-xs-2'>{Number(item.total).toFixed(2)}</td>
-                                                <td className='col-xs-3'>
-                                                    <FormControl
-                                                        type='number'
-                                                        min='1'
-                                                        max='100'
-                                                        placeholder='qty'
-                                                        value={item.quantity}
-                                                        onChange={this.handleChangeQuantity.bind(this, item)}
-                                                    />
-                                                </td>
-                                                <td className='col-xs-2'>
-                                                    <Button
-                                                        bsStyle='danger'
-                                                        disabled={invoiceProducts.length === 1}
-                                                        onClick={this.handleDeleteProductFromInvoice.bind(this, item)}
-                                                    >Delete</Button>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </Table>
-                            </Panel>
-                        </Col>
-                    </Row>
-                </Grid>
+                                        <tbody>
+                                        {this.state.invoiceProducts.map(item =>
+                                            (
+                                                <tr key={`ip${item.id}`}>
+                                                    <td className='col-xs-3'>{item.name}</td>
+                                                    <td className='col-xs-2'>{Number(item.price).toFixed(2)}</td>
+                                                    <td className='col-xs-2'>{Number(item.total).toFixed(2)}</td>
+                                                    <td className='col-xs-3'>
+                                                        <FormControl
+                                                            type='number'
+                                                            min='1'
+                                                            max='100'
+                                                            placeholder='qty'
+                                                            value={item.quantity}
+                                                            onChange={this.handleChangeQuantity.bind(this, item)}
+                                                        />
+                                                    </td>
+                                                    <td className='col-xs-2'>
+                                                        <Button
+                                                            bsStyle='danger'
+                                                            disabled={invoiceProducts.length === 1}
+                                                            onClick={this.handleDeleteProductFromInvoice.bind(this, item)}
+                                                        >Delete</Button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </Table>
+                                </Panel>
+                            </Col>
+                        </Row>
+                    </Grid>
+                </EZT>
             </div>
         )
     }

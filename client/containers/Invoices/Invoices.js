@@ -5,6 +5,7 @@
 
 import React, { Component } from 'react';
 import Helmet from 'react-helmet';
+import EZT from 'react-easy-transition';
 import { connect } from 'react-redux';
 
 import { Grid, Row, Col, PageHeader, Button } from 'react-bootstrap';
@@ -33,20 +34,27 @@ class Invoices extends Component {
             <div>
                 <Helmet title='Invoices | Invoice App'/>
                 <Menu/>
-                <Grid>
-                    <Row>
-                        <Col xs={12}>
-                            <PageHeader>
-                                Invoices list <LinkContainer to='/invoices/add'><Button>Create</Button></LinkContainer>
-                            </PageHeader>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xs={12}>
-                            <InvoicesTable invoicesList={invoicesList} dispatch={dispatch}/>
-                        </Col>
-                    </Row>
-                </Grid>
+                <EZT
+                    path={location.pathname}
+                    initialStyle={{ opacity: 0 }}
+                    transition="opacity 0.3s ease-in"
+                    finalStyle={{ opacity: 1 }}
+                >
+                    <Grid>
+                        <Row>
+                            <Col xs={12}>
+                                <PageHeader>
+                                    Invoices list <LinkContainer to='/invoices/add'><Button>Create</Button></LinkContainer>
+                                </PageHeader>
+                            </Col>
+                        </Row>
+                        <Row>
+                            <Col xs={12}>
+                                <InvoicesTable invoicesList={invoicesList} dispatch={dispatch}/>
+                            </Col>
+                        </Row>
+                    </Grid>
+                </EZT>
 
                 <ModalDeleteInvoice
                     open={modalDeleteInvoiceIsOpen}

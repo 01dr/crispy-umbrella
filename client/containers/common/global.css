@@ -1,0 +1,3 @@
+.input-group-btn:last-child > .btn {
+	z-index: auto;
+}
