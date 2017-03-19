@@ -18,37 +18,44 @@ export default class ModalAddProduct extends Component {
         this.state = {
             name: this.props.name || '',
             price: this.props.price || '',
-            nameErrorText: '',
-            priceErrorText: '',
+            nameError: '',
+            priceError: '',
             formValidate: false
         }
     }
 
-    handleNameChange(e) {
-        const name = e.target.value;
-        this.setState({ name }, () => this.handleNameValidate(name));
+    handleFieldChange(field, e) {
+        const value = e.target.value;
+        this.setState({ [field]: value }, () => this.handleFieldValidate(field, value));
     }
 
-    handlePriceChange(e) {
-        const price = e.target.value;
-        this.setState({ price }, () => this.handlePriceValidate(price));
-    }
+    handleFieldValidate(field, value) {
+        console.log(field, value);
+        switch (field) {
+        case 'name':
+            if (value.trim().length < 5) {
+                this.setState({ nameError: 'Name should be more than 5 symbols' });
+                break;
+            }
 
-    handleNameValidate(value) {
-        if (value.length < 5) {
-            this.setState({ nameError: 'Name should be more than 5 symbols' });
-        } else {
             this.setState({ nameError: '' });
-        }
-    }
+            break;
+        case 'price':
+            if (!value.match(/^\d+(.\d{1,2})?$/)) {
+                this.setState({ priceError: 'Price should be a number' });
+                break;
+            }
 
-    handlePriceValidate(value) {
-        if (!value.match(/^\d+(.\d{1,2})?$/)) {
-            this.setState({ priceError: 'Price should be a number' });
-        } else if (value === '') {
-            this.setState({ priceError: 'Price is empty' });
-        } else {
+            if (value === '') {
+                this.setState({ priceError: 'Price is empty' });
+                break;
+            }
+
             this.setState({ priceError: '' });
+            break;
+
+        default:
+            break;
         }
     }
 
@@ -82,7 +89,7 @@ export default class ModalAddProduct extends Component {
                                 name='name'
                                 value={name}
                                 placeholder='Phone Holder'
-                                onChange={::this.handleNameChange}
+                                onChange={this.handleFieldChange.bind(this, 'name')}
                             />
                         </FormGroup>
                         <FormGroup>
@@ -92,7 +99,7 @@ export default class ModalAddProduct extends Component {
                                 name='price'
                                 value={price}
                                 placeholder='9.99'
-                                onChange={::this.handlePriceChange}
+                                onChange={this.handleFieldChange.bind(this, 'price')}
                             />
                         </FormGroup>
                     </form>
