@@ -6,7 +6,7 @@
 import React, { Component } from 'react';
 import {
     Modal, ModalBody, ModalHeader, ModalFooter, ModalTitle,
-    Button, FormGroup, ControlLabel, FormControl
+    Button, FormGroup, ControlLabel, FormControl, Alert
 } from 'react-bootstrap';
 
 import { closeModalAddProduct, addProduct } from '../../actions/productsActions';
@@ -17,29 +17,55 @@ export default class ModalAddProduct extends Component {
 
         this.state = {
             name: this.props.name || '',
-            price: this.props.price || ''
+            price: this.props.price || '',
+            nameErrorText: '',
+            priceErrorText: '',
+            formValidate: false
         }
     }
 
     handleNameChange(e) {
-        this.setState({ name: e.target.value });
+        const name = e.target.value;
+        this.setState({ name }, () => this.handleNameValidate(name));
     }
 
     handlePriceChange(e) {
-        this.setState({ price: e.target.value });
+        const price = e.target.value;
+        this.setState({ price }, () => this.handlePriceValidate(price));
+    }
+
+    handleNameValidate(value) {
+        if (value.length < 5) {
+            this.setState({ nameError: 'Name should be more than 5 symbols' });
+        } else {
+            this.setState({ nameError: '' });
+        }
+    }
+
+    handlePriceValidate(value) {
+        if (!value.match(/^\d+(.\d{1,2})?$/)) {
+            this.setState({ priceError: 'Price should be a number' });
+        } else if (value === '') {
+            this.setState({ priceError: 'Price is empty' });
+        } else {
+            this.setState({ priceError: '' });
+        }
     }
 
     handleSubmit(e) {
         const { dispatch } = this.props;
-        const { name, price } = this.state;
+        const { name, price, nameError, priceError } = this.state;
         e.preventDefault();
-        dispatch(addProduct({ name, price }));
-        dispatch(closeModalAddProduct());
+
+        if (nameError + priceError === '') {
+            dispatch(addProduct({ name, price }));
+            dispatch(closeModalAddProduct());
+        }
     }
 
     render() {
         const { dispatch, open } = this.props;
-        const { name, price } = this.state;
+        const { name, price, nameError, priceError } = this.state;
 
         return (
             <Modal show={open}>
@@ -53,6 +79,7 @@ export default class ModalAddProduct extends Component {
                             <ControlLabel>Name</ControlLabel>
                             <FormControl
                                 type='text'
+                                name='name'
                                 value={name}
                                 placeholder='Phone Holder'
                                 onChange={::this.handleNameChange}
@@ -62,12 +89,16 @@ export default class ModalAddProduct extends Component {
                             <ControlLabel>Price</ControlLabel>
                             <FormControl
                                 type='text'
+                                name='price'
                                 value={price}
                                 placeholder='9.99'
                                 onChange={::this.handlePriceChange}
                             />
                         </FormGroup>
                     </form>
+
+                    {nameError && <Alert bsStyle='danger'>{nameError}</Alert>}
+                    {priceError && <Alert bsStyle='danger'>{priceError}</Alert>}
                 </ModalBody>
 
                 <ModalFooter>
